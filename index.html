@@ -128,11 +128,22 @@
     }
 
   /* FIX HERO TITLE CUTTING */
+/* FIX HERO TITLE CUTTING */
+.hero {
+  grid-template-columns: minmax(0, 560px) minmax(360px, 1fr) !important;
+  gap: 48px !important;
+}
+
+.hero > div:first-child {
+  min-width: 0 !important;
+  max-width: 560px !important;
+}
+
 h1 {
-  max-width: 100% !important;
-  font-size: clamp(3rem, 5.8vw, 5.4rem) !important;
-  line-height: 0.95 !important;
-  letter-spacing: -0.06em !important;
+  max-width: 560px !important;
+  font-size: clamp(2.6rem, 4.4vw, 4.65rem) !important;
+  line-height: 1 !important;
+  letter-spacing: -0.055em !important;
   overflow: visible !important;
 }
 
@@ -143,18 +154,27 @@ h1 {
 }
 
 @media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero > div:first-child {
+    max-width: 100% !important;
+  }
+
   h1 {
-    font-size: clamp(2.7rem, 12vw, 4.8rem) !important;
+    max-width: 100% !important;
+    font-size: clamp(2.8rem, 10vw, 4.6rem) !important;
   }
 }
 
 @media (max-width: 640px) {
   h1 {
-    font-size: 3rem !important;
-    line-height: 1 !important;
-    letter-spacing: -0.055em !important;
+    font-size: 2.75rem !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.045em !important;
   }
-}&  
+} 
 
     h1 span {
       background: linear-gradient(135deg, var(--purple), var(--pink), var(--gold));
