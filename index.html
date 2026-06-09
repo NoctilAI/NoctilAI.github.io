@@ -5,16 +5,534 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>NoctilAI — 100% Local AI Roleplay</title>
-  <meta name="description" content="NoctilAI is a 100% local AI roleplay application focused on privacy, immersion and local AI conversations." />
+  <meta
+    name="description"
+    content="NoctilAI is a 100% local AI roleplay application focused on privacy, immersion, character creation and offline AI conversations."
+  />
 
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --bg: #07070d;
+      --bg2: #15081c;
+      --card: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.14);
+      --text: #f7f1ff;
+      --muted: #bfb6d1;
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --gold: #f5c86b;
+      --green: #7cf7b5;
+      --shadow: 0 32px 90px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 8%, rgba(168, 85, 247, 0.26), transparent 34%),
+        radial-gradient(circle at 85% 10%, rgba(236, 72, 153, 0.16), transparent 34%),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      width: min(1180px, calc(100% - 32px));
+      height: 86px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .logo-box {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      min-height: 48px;
+      max-width: 48px;
+      max-height: 48px;
+      background-image: url("noctilai_logo_sans_fond_recadre.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.55));
+    }
+
+    .brand-name {
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .nav-links a {
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* HERO */
+
+    .hero {
+      width: min(1180px, calc(100% - 32px));
+      margin: 70px auto 120px;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: center;
+      gap: 56px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.78rem;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(3.2rem, 7vw, 6.25rem);
+      line-height: 0.92;
+      letter-spacing: -0.085em;
+      max-width: 780px;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, var(--purple), var(--pink), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-description {
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.85;
+      max-width: 650px;
+      margin-top: 28px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .btn {
+      min-height: 50px;
+      padding: 0 24px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: white;
+      box-shadow: 0 18px 42px rgba(168, 85, 247, 0.28);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .badges span {
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgba(124, 247, 181, 0.08);
+      border: 1px solid rgba(124, 247, 181, 0.19);
+      color: #caffdf;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    /* PREVIEW CARD */
+
+    .preview-card {
+      width: 100%;
+      max-width: 530px;
+      justify-self: end;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04)),
+        rgba(255, 255, 255, 0.045);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .window-bar {
+      height: 58px;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.045);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .window-bar span {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.27);
+    }
+
+    .chat-preview {
+      padding: 28px;
+    }
+
+    .message {
+      max-width: 88%;
+      width: fit-content;
+      padding: 16px 18px;
+      border-radius: 18px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-size: 0.96rem;
+    }
+
+    .message-user {
+      margin-left: auto;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.27), rgba(236, 72, 153, 0.18));
+      border: 1px solid rgba(168, 85, 247, 0.32);
+    }
+
+    .message-ai {
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.075);
+      border: 1px solid var(--border);
+    }
+
+    .stats {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .stats div {
+      padding: 16px;
+      border-radius: 17px;
+      background: rgba(0, 0, 0, 0.23);
+      border: 1px solid var(--border);
+    }
+
+    .stats strong {
+      display: block;
+      font-size: 0.84rem;
+      margin-bottom: 6px;
+    }
+
+    .stats p {
+      color: var(--green);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    /* SECTIONS */
+
+    section {
+      scroll-margin-top: 100px;
+    }
+
+    .section {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto 110px;
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      font-size: clamp(2.25rem, 4vw, 4rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      margin-bottom: 18px;
+    }
+
+    .section-title p,
+    .card p,
+    .local-section p,
+    .privacy-card p,
+    .download-card p {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 1.03rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card,
+    .privacy-card,
+    .download-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 26px;
+      backdrop-filter: blur(14px);
+    }
+
+    .card h3 {
+      font-size: 1.22rem;
+      margin-bottom: 12px;
+    }
+
+    /* LOCAL SECTION */
+
+    .local-section {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto 110px;
+      display: grid;
+      grid-template-columns: 1fr 0.72fr;
+      gap: 30px;
+      padding: 34px;
+      border-radius: 36px;
+      background:
+        radial-gradient(circle at top left, rgba(168, 85, 247, 0.17), transparent 42%),
+        rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border);
+    }
+
+    .local-section ul {
+      list-style: none;
+      margin-top: 26px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .local-section li {
+      padding: 13px 15px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid var(--border);
+    }
+
+    .local-section li::before {
+      content: "✓";
+      margin-right: 10px;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .privacy-card h3 {
+      font-size: 1.55rem;
+      margin-bottom: 12px;
+    }
+
+    .privacy-row {
+      margin-top: 18px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .privacy-row span {
+      color: var(--muted);
+    }
+
+    .privacy-row strong {
+      color: var(--green);
+    }
+
+    /* DOWNLOAD */
+
+    .download-section {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto 110px;
+      text-align: center;
+    }
+
+    .download-card {
+      padding: 42px;
+      box-shadow: var(--shadow);
+    }
+
+    .center {
+      justify-content: center;
+    }
+
+    .small {
+      font-size: 0.92rem !important;
+      margin-top: 22px;
+    }
+
+    /* FOOTER */
+
+    .footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 46px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--muted);
+    }
+
+    .footer strong {
+      color: var(--text);
+    }
+
+    .footer p {
+      margin-top: 6px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .navbar {
+        height: auto;
+        padding: 18px 0;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero,
+      .local-section {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-card {
+        justify-self: start;
+      }
+
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .brand-name {
+        font-size: 1rem;
+      }
+
+      .logo-box {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        min-height: 42px;
+        max-width: 42px;
+        max-height: 42px;
+      }
+
+      h1 {
+        font-size: 3.1rem;
+      }
+
+      .hero {
+        margin-top: 36px;
+        margin-bottom: 82px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .local-section,
+      .download-card {
+        padding: 24px;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <header class="navbar">
     <a href="#" class="brand">
-      <img src="noctilai_logo_sans_fond_recadre.png" alt="NoctilAI" class="brand-logo" />
-      <span>NoctilAI</span>
+      <div class="logo-box" aria-label="NoctilAI logo"></div>
+      <span class="brand-name">NoctilAI</span>
     </a>
 
     <nav class="nav-links">
@@ -27,26 +545,36 @@
 
   <main>
     <section class="hero">
-      <div class="hero-content">
+      <div>
         <p class="eyebrow">Private • Local • Immersive</p>
 
         <h1>
-          AI roleplay,<br>
-          running <span>100% locally</span><br>
+          AI roleplay,<br />
+          running <span>100% locally</span><br />
           on your own device.
         </h1>
 
-        <p class="hero-text">
+        <p class="hero-description">
           NoctilAI is a local AI roleplay application designed for immersive conversations,
           character creation and full privacy. Your characters, chats and AI models stay on your machine.
         </p>
 
         <div class="buttons">
-          <a class="btn primary" href="https://github.com/NoctilAI/NoctilAI.github.io/releases/latest" target="_blank" rel="noopener">
+          <a
+            class="btn btn-primary"
+            href="https://github.com/NoctilAI/NoctilAI.github.io/releases/latest"
+            target="_blank"
+            rel="noopener"
+          >
             Download latest release
           </a>
 
-          <a class="btn secondary" href="https://discord.gg/CDWfEBv7RR" target="_blank" rel="noopener">
+          <a
+            class="btn btn-secondary"
+            href="https://discord.gg/CDWfEBv7RR"
+            target="_blank"
+            rel="noopener"
+          >
             Join Discord
           </a>
         </div>
@@ -60,15 +588,17 @@
 
       <div class="preview-card">
         <div class="window-bar">
-          <span></span><span></span><span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
 
         <div class="chat-preview">
-          <div class="message user">
+          <div class="message message-user">
             Create a mysterious character for a dark fantasy roleplay.
           </div>
 
-          <div class="message ai">
+          <div class="message message-ai">
             Character created locally. No data was sent to external servers.
           </div>
 
@@ -96,7 +626,9 @@
       <div class="section-title">
         <p class="eyebrow">Features</p>
         <h2>Built for immersive local roleplay</h2>
-        <p>NoctilAI gives you control over your AI experience without depending on cloud platforms.</p>
+        <p>
+          NoctilAI gives you control over your AI experience without depending on cloud platforms.
+        </p>
       </div>
 
       <div class="grid">
@@ -153,7 +685,9 @@
 
       <div class="privacy-card">
         <h3>Privacy-first design</h3>
-        <p>Made for users who want immersive AI conversations without giving up control of their data.</p>
+        <p>
+          Made for users who want immersive AI conversations without giving up control of their data.
+        </p>
 
         <div class="privacy-row">
           <span>Cloud dependency</span>
@@ -183,16 +717,28 @@
         </p>
 
         <div class="buttons center">
-          <a class="btn primary" href="https://github.com/NoctilAI/NoctilAI.github.io/releases/latest" target="_blank" rel="noopener">
+          <a
+            class="btn btn-primary"
+            href="https://github.com/NoctilAI/NoctilAI.github.io/releases/latest"
+            target="_blank"
+            rel="noopener"
+          >
             Open GitHub Releases
           </a>
 
-          <a class="btn secondary" href="https://discord.gg/CDWfEBv7RR" target="_blank" rel="noopener">
+          <a
+            class="btn btn-secondary"
+            href="https://discord.gg/CDWfEBv7RR"
+            target="_blank"
+            rel="noopener"
+          >
             Join the community
           </a>
         </div>
 
-        <p class="small">Requirements depend on the local AI model you choose to run.</p>
+        <p class="small">
+          Requirements depend on the local AI model you choose to run.
+        </p>
       </div>
     </section>
   </main>
