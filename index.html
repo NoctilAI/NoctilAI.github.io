@@ -1,801 +1,3460 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>NoctilAI — 100% Local AI Roleplay</title>
-  <meta
-    name="description"
-    content="NoctilAI is a 100% local AI roleplay application focused on privacy, immersion, character creation and offline AI conversations."
-  />
-
-  <style>
-    :root {
-      --bg: #07070d;
-      --bg2: #15081c;
-      --card: rgba(255, 255, 255, 0.07);
-      --border: rgba(255, 255, 255, 0.14);
-      --text: #f7f1ff;
-      --muted: #bfb6d1;
-      --purple: #a855f7;
-      --pink: #ec4899;
-      --gold: #f5c86b;
-      --green: #7cf7b5;
-      --shadow: 0 32px 90px rgba(0, 0, 0, 0.45);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 15% 8%, rgba(168, 85, 247, 0.26), transparent 34%),
-        radial-gradient(circle at 85% 10%, rgba(236, 72, 153, 0.16), transparent 34%),
-        linear-gradient(135deg, var(--bg), var(--bg2));
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* NAVBAR */
-
-    .navbar {
-      width: min(1180px, calc(100% - 32px));
-      height: 86px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
-    .logo-box {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      min-height: 48px;
-      max-width: 48px;
-      max-height: 48px;
-      background-image: url("noctilai_logo_sans_fond_recadre.png");
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.55));
-    }
-
-    .brand-name {
-      font-size: 1.1rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 26px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .nav-links a {
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-    }
-
-    /* HERO */
-
-    .hero {
-      width: min(1180px, calc(100% - 32px));
-      margin: 70px auto 120px;
-      display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      align-items: center;
-      gap: 56px;
-    }
-
-    .eyebrow {
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      font-size: 0.78rem;
-      font-weight: 900;
-      margin-bottom: 18px;
-    }
-
-  /* FIX HERO TITLE CUTTING */
-/* FIX HERO TITLE CUTTING */
-.hero {
-  grid-template-columns: minmax(0, 560px) minmax(360px, 1fr) !important;
-  gap: 48px !important;
-}
-
-.hero > div:first-child {
-  min-width: 0 !important;
-  max-width: 560px !important;
-}
-
-h1 {
-  max-width: 560px !important;
-  font-size: clamp(2.6rem, 4.4vw, 4.65rem) !important;
-  line-height: 1 !important;
-  letter-spacing: -0.055em !important;
-  overflow: visible !important;
-}
-
-.hero,
-.hero-content,
-.hero-text {
-  overflow: visible !important;
-}
-
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr !important;
-  }
-
-  .hero > div:first-child {
-    max-width: 100% !important;
-  }
-
-  h1 {
-    max-width: 100% !important;
-    font-size: clamp(2.8rem, 10vw, 4.6rem) !important;
-  }
-}
-
-@media (max-width: 640px) {
-  h1 {
-    font-size: 2.75rem !important;
-    line-height: 1.02 !important;
-    letter-spacing: -0.045em !important;
-  }
-} 
-
-    h1 span {
-      background: linear-gradient(135deg, var(--purple), var(--pink), var(--gold));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-description {
-      color: var(--muted);
-      font-size: 1.08rem;
-      line-height: 1.85;
-      max-width: 650px;
-      margin-top: 28px;
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 34px;
-    }
-
-    .btn {
-      min-height: 50px;
-      padding: 0 24px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      color: white;
-      box-shadow: 0 18px 42px rgba(168, 85, 247, 0.28);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-
-    .btn-secondary:hover {
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
-    }
-
-    .badges span {
-      padding: 8px 13px;
-      border-radius: 999px;
-      background: rgba(124, 247, 181, 0.08);
-      border: 1px solid rgba(124, 247, 181, 0.19);
-      color: #caffdf;
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
-
-    /* PREVIEW CARD */
-
-    .preview-card {
-      width: 100%;
-      max-width: 530px;
-      justify-self: end;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04)),
-        rgba(255, 255, 255, 0.045);
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
-
-    .window-bar {
-      height: 58px;
-      padding: 0 22px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.045);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .window-bar span {
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.27);
-    }
-
-    .chat-preview {
-      padding: 28px;
-    }
-
-    .message {
-      max-width: 88%;
-      width: fit-content;
-      padding: 16px 18px;
-      border-radius: 18px;
-      line-height: 1.6;
-      margin-bottom: 16px;
-      font-size: 0.96rem;
-    }
-
-    .message-user {
-      margin-left: auto;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.27), rgba(236, 72, 153, 0.18));
-      border: 1px solid rgba(168, 85, 247, 0.32);
-    }
-
-    .message-ai {
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.075);
-      border: 1px solid var(--border);
-    }
-
-    .stats {
-      margin-top: 28px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .stats div {
-      padding: 16px;
-      border-radius: 17px;
-      background: rgba(0, 0, 0, 0.23);
-      border: 1px solid var(--border);
-    }
-
-    .stats strong {
-      display: block;
-      font-size: 0.84rem;
-      margin-bottom: 6px;
-    }
-
-    .stats p {
-      color: var(--green);
-      font-size: 0.86rem;
-      font-weight: 700;
-    }
-
-    /* SECTIONS */
-
-    section {
-      scroll-margin-top: 100px;
-    }
-
-    .section {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto 110px;
-    }
-
-    .section-title {
-      max-width: 760px;
-      margin-bottom: 36px;
-    }
-
-    h2 {
-      font-size: clamp(2.25rem, 4vw, 4rem);
-      line-height: 1;
-      letter-spacing: -0.06em;
-      margin-bottom: 18px;
-    }
-
-    .section-title p,
-    .card p,
-    .local-section p,
-    .privacy-card p,
-    .download-card p {
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 1.03rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .card,
-    .privacy-card,
-    .download-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 26px;
-      backdrop-filter: blur(14px);
-    }
-
-    .card h3 {
-      font-size: 1.22rem;
-      margin-bottom: 12px;
-    }
-
-    /* LOCAL SECTION */
-
-    .local-section {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto 110px;
-      display: grid;
-      grid-template-columns: 1fr 0.72fr;
-      gap: 30px;
-      padding: 34px;
-      border-radius: 36px;
-      background:
-        radial-gradient(circle at top left, rgba(168, 85, 247, 0.17), transparent 42%),
-        rgba(255, 255, 255, 0.035);
-      border: 1px solid var(--border);
-    }
-
-    .local-section ul {
-      list-style: none;
-      margin-top: 26px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .local-section li {
-      padding: 13px 15px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.045);
-      border: 1px solid var(--border);
-    }
-
-    .local-section li::before {
-      content: "✓";
-      margin-right: 10px;
-      color: var(--green);
-      font-weight: 900;
-    }
-
-    .privacy-card h3 {
-      font-size: 1.55rem;
-      margin-bottom: 12px;
-    }
-
-    .privacy-row {
-      margin-top: 18px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .privacy-row span {
-      color: var(--muted);
-    }
-
-    .privacy-row strong {
-      color: var(--green);
-    }
-
-    /* DOWNLOAD */
-
-    .download-section {
-      width: min(920px, calc(100% - 32px));
-      margin: 0 auto 110px;
-      text-align: center;
-    }
-
-    .download-card {
-      padding: 42px;
-      box-shadow: var(--shadow);
-    }
-
-    .center {
-      justify-content: center;
-    }
-
-    .small {
-      font-size: 0.92rem !important;
-      margin-top: 22px;
-    }
-
-    /* FOOTER */
-
-    .footer {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 34px 0 46px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      color: var(--muted);
-    }
-
-    .footer strong {
-      color: var(--text);
-    }
-
-    .footer p {
-      margin-top: 6px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 18px;
-    }
-
-    .footer-links a:hover {
-      color: var(--text);
-    }
-
-    /* RESPONSIVE */
-
-    @media (max-width: 900px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="NoctilAI is a local roleplay studio for Windows. Create characters, write immersive scenes and keep your stories on your own machine."
+    />
+    <meta name="theme-color" content="#050408" />
+    <meta property="og:title" content="NoctilAI — Your stories stay yours" />
+    <meta
+      property="og:description"
+      content="A local roleplay studio built for characters worth remembering."
+    />
+    <meta property="og:type" content="website" />
+    <title>NoctilAI — Your stories stay yours</title>
+
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #050408;
+        --ink-soft: #09070d;
+        --surface: #0d0a12;
+        --surface-raised: #121018;
+        --line: rgba(255, 255, 255, 0.1);
+        --line-soft: rgba(255, 255, 255, 0.065);
+        --paper: #f5f1f7;
+        --copy: #c0b7c7;
+        --muted: #7c7284;
+        --plum: #a85ac7;
+        --plum-deep: #633279;
+        --rose: #d584ba;
+        --gold: #d2a95c;
+        --green: #75b995;
+        --container: 1200px;
+        --nav-height: 72px;
+        --radius: 12px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: calc(var(--nav-height) + 28px);
+        overflow-x: hidden;
+        background: var(--ink);
+      }
+
+      body {
+        min-width: 0;
+        margin: 0;
+        overflow-x: hidden;
+        background:
+          linear-gradient(90deg, transparent 0, transparent calc(50% - 1px), rgba(255, 255, 255, 0.018) 50%, transparent calc(50% + 1px)),
+          var(--ink);
+        color: var(--paper);
+        font-family:
+          Inter,
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        line-height: 1.6;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      ::selection {
+        background: rgba(168, 90, 199, 0.38);
+        color: #ffffff;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--ink);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: #392b40;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      svg {
+        display: block;
+        flex: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      p,
+      h1,
+      h2,
+      h3,
+      h4 {
+        max-width: 100%;
+        margin-top: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .container {
+        width: min(calc(100% - 48px), var(--container));
+        margin-inline: auto;
+      }
+
+      .section {
+        padding: 128px 0;
+      }
+
+      .section-rule {
+        width: min(calc(100% - 48px), var(--container));
+        height: 1px;
+        margin-inline: auto;
+        background: var(--line-soft);
+      }
+
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        color: var(--gold);
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .kicker::before {
+        width: 24px;
+        height: 1px;
+        content: "";
+        background: currentColor;
+      }
+
+      .section-title {
+        max-width: 12ch;
+        margin-bottom: 0;
+        color: var(--paper);
+        font-family:
+          Georgia,
+          "Times New Roman",
+          serif;
+        font-size: clamp(3rem, 6vw, 6.2rem);
+        font-weight: 400;
+        letter-spacing: -0.055em;
+        line-height: 0.98;
+      }
+
+      .section-title em {
+        color: var(--rose);
+        font-weight: 400;
+      }
+
+      .section-copy {
+        max-width: 600px;
+        margin: 24px 0 0;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.85;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 48px;
+        max-width: 100%;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 11px 17px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        transition:
+          border-color 180ms ease,
+          background 180ms ease,
+          color 180ms ease,
+          transform 180ms ease;
+      }
+
+      .button-primary {
+        border-color: #b865c7;
+        background: #a84bb7;
+        color: #ffffff;
+      }
+
+      .button-primary:hover,
+      .button-primary:focus-visible {
+        border-color: #d185d7;
+        background: #b95bc4;
+        outline: none;
+        transform: translateY(-2px);
+      }
+
+      .button-secondary {
+        border-color: var(--line);
+        background: transparent;
+        color: var(--copy);
+      }
+
+      .button-secondary:hover,
+      .button-secondary:focus-visible {
+        border-color: rgba(213, 132, 186, 0.36);
+        background: rgba(255, 255, 255, 0.035);
+        color: #ffffff;
+        outline: none;
+        transform: translateY(-2px);
+      }
+
+      /* Navigation */
+
       .navbar {
-        height: auto;
-        padding: 18px 0;
+        position: fixed;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        left: 0;
+        border-bottom: 1px solid var(--line-soft);
+        background: rgba(5, 4, 8, 0.88);
+        backdrop-filter: blur(16px);
+      }
+
+      .nav-inner {
+        display: flex;
+        min-height: var(--nav-height);
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand {
+        display: inline-flex;
+        min-width: max-content;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-logo {
+        width: 42px;
+        max-width: 48px;
+        height: 42px;
+        max-height: 48px;
+        background-image: url("noctilai_logo_sans_fond_recadre.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      .brand-name {
+        color: #ffffff;
+        font-size: 1rem;
+        font-weight: 850;
+        letter-spacing: -0.025em;
+      }
+
+      .brand-name span {
+        color: var(--rose);
       }
 
       .nav-links {
-        display: none;
+        display: flex;
+        align-items: center;
+        gap: 22px;
       }
 
-      .hero,
-      .local-section {
-        grid-template-columns: 1fr;
+      .nav-link {
+        position: relative;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 750;
+        letter-spacing: 0.025em;
+        transition: color 180ms ease;
       }
 
-      .preview-card {
-        justify-self: start;
+      .nav-link::after {
+        position: absolute;
+        right: 0;
+        bottom: -8px;
+        left: 0;
+        height: 1px;
+        content: "";
+        background: var(--rose);
+        opacity: 0;
+        transform: scaleX(0.5);
+        transition:
+          opacity 180ms ease,
+          transform 180ms ease;
       }
 
-      .grid {
-        grid-template-columns: 1fr 1fr;
+      .nav-link:hover,
+      .nav-link:focus-visible {
+        color: #ffffff;
+        outline: none;
       }
-    }
 
-    @media (max-width: 640px) {
-      .brand-name {
+      .nav-link:hover::after,
+      .nav-link:focus-visible::after {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+
+      .nav-download {
+        display: inline-flex;
+        min-height: 38px;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--copy);
+        font-size: 0.7rem;
+        font-weight: 800;
+        transition:
+          border-color 180ms ease,
+          color 180ms ease,
+          background 180ms ease;
+      }
+
+      .nav-download:hover,
+      .nav-download:focus-visible {
+        border-color: rgba(213, 132, 186, 0.4);
+        background: rgba(255, 255, 255, 0.035);
+        color: #ffffff;
+        outline: none;
+      }
+
+      /* Hero */
+
+      .hero {
+        position: relative;
+        display: grid;
+        min-height: min(920px, 100svh);
+        align-items: center;
+        padding: calc(var(--nav-height) + 80px) 0 88px;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        position: absolute;
+        z-index: -1;
+        top: 50%;
+        left: 50%;
+        width: min(72vw, 900px);
+        aspect-ratio: 1;
+        content: "";
+        background-image: url("noctilai_logo_sans_fond_recadre.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        opacity: 0.045;
+        transform: translate(-50%, -50%);
+      }
+
+      .hero-layout {
+        display: grid;
+        min-width: 0;
+        grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+        align-items: center;
+        gap: clamp(56px, 9vw, 120px);
+      }
+
+      .hero-copy {
+        min-width: 0;
+      }
+
+      .availability {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 25px;
+        color: #a29aa8;
+        font-size: 0.67rem;
+        font-weight: 750;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .availability::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        content: "";
+        background: var(--green);
+      }
+
+      .hero-title {
+        max-width: 8.8ch;
+        margin: 0;
+        color: #ffffff;
+        font-family:
+          Georgia,
+          "Times New Roman",
+          serif;
+        font-size: clamp(4.7rem, 9vw, 9.4rem);
+        font-weight: 400;
+        letter-spacing: -0.07em;
+        line-height: 0.84;
+      }
+
+      .hero-title em {
+        display: block;
+        color: var(--rose);
+        font-weight: 400;
+      }
+
+      .hero-description {
+        max-width: 570px;
+        margin: 30px 0 0;
+        color: var(--copy);
+        font-size: clamp(1rem, 1.5vw, 1.12rem);
+        line-height: 1.8;
+      }
+
+      .hero-description strong {
+        color: #ffffff;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 11px;
+        margin-top: 28px;
+      }
+
+      .hero-footnote {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 27px;
+        color: #746b7a;
+        font-size: 0.68rem;
+        font-weight: 700;
+      }
+
+      .hero-footnote span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .hero-footnote span::before {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        content: "";
+        background: var(--gold);
+      }
+
+      /* Product scene */
+
+      .product-scene {
+        position: relative;
+        min-width: 0;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #08060b;
+        box-shadow: 0 32px 90px rgba(0, 0, 0, 0.48);
+        transform: rotate(1.2deg);
+      }
+
+      .product-scene::before {
+        position: absolute;
+        z-index: -1;
+        top: 22px;
+        right: -18px;
+        bottom: -18px;
+        left: 22px;
+        border: 1px solid rgba(210, 169, 92, 0.16);
+        border-radius: 16px;
+        content: "";
+      }
+
+      .scene-window {
+        display: grid;
+        min-height: 560px;
+        overflow: hidden;
+        border: 1px solid var(--line-soft);
+        border-radius: 10px;
+        background: var(--surface);
+        grid-template-columns: 105px minmax(0, 1fr);
+      }
+
+      .scene-sidebar {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        padding: 13px 10px;
+        border-right: 1px solid var(--line-soft);
+        background: #09070d;
+      }
+
+      .scene-brand {
+        display: grid;
+        width: 31px;
+        height: 31px;
+        margin-bottom: 24px;
+        place-items: center;
+        border: 1px solid rgba(213, 132, 186, 0.22);
+        border-radius: 8px;
+        color: var(--rose);
+        font-family: Georgia, serif;
         font-size: 1rem;
       }
 
-      .logo-box {
-        width: 42px;
-        height: 42px;
-        min-width: 42px;
-        min-height: 42px;
-        max-width: 42px;
-        max-height: 42px;
+      .scene-nav {
+        display: grid;
+        gap: 6px;
       }
 
-      h1 {
-        font-size: 3.1rem;
+      .scene-nav-item {
+        height: 28px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .scene-nav-item.active {
+        border-left: 2px solid var(--rose);
+        background: rgba(213, 132, 186, 0.08);
+      }
+
+      .scene-sidebar-status {
+        margin-top: auto;
+        padding: 8px;
+        border: 1px solid var(--line-soft);
+        border-radius: 7px;
+        color: #69616e;
+        font-size: 0.48rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .scene-main {
+        display: grid;
+        min-width: 0;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+      }
+
+      .scene-header {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 14px 15px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .scene-avatar {
+        display: grid;
+        width: 37px;
+        height: 37px;
+        place-items: center;
+        border: 1px solid rgba(213, 132, 186, 0.22);
+        border-radius: 9px;
+        background: #26182d;
+        color: #e6b3d6;
+        font-family: Georgia, serif;
+        font-size: 0.9rem;
+      }
+
+      .scene-person {
+        min-width: 0;
+      }
+
+      .scene-person strong {
+        display: block;
+        color: #ffffff;
+        font-size: 0.68rem;
+      }
+
+      .scene-person span {
+        display: block;
+        margin-top: 2px;
+        color: #716777;
+        font-size: 0.5rem;
+      }
+
+      .scene-chat {
+        display: grid;
+        align-content: end;
+        gap: 13px;
+        padding: 16px;
+      }
+
+      .scene-message {
+        max-width: 87%;
+        padding: 11px 12px;
+        border: 1px solid var(--line-soft);
+        border-radius: 9px;
+        background: #100d14;
+        color: #a99fad;
+        font-family: Georgia, serif;
+        font-size: 0.6rem;
+        line-height: 1.65;
+      }
+
+      .scene-message.character {
+        border-color: rgba(213, 132, 186, 0.14);
+        background: #130d16;
+        color: #c8bbc8;
+      }
+
+      .scene-message.user {
+        justify-self: end;
+        border-color: rgba(210, 169, 92, 0.14);
+        background: #12100e;
+        color: #b9afa2;
+      }
+
+      .scene-composer {
+        margin: 0 15px 15px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: #655c6a;
+        font-size: 0.52rem;
+      }
+
+      .scene-caption {
+        position: absolute;
+        right: 18px;
+        bottom: -48px;
+        color: #645b69;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* Intro statement */
+
+      .statement {
+        padding: 92px 0;
+        border-top: 1px solid var(--line-soft);
+        border-bottom: 1px solid var(--line-soft);
+        background: #08060b;
+      }
+
+      .statement-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.38fr) minmax(0, 1fr);
+        align-items: start;
+        gap: 60px;
+      }
+
+      .statement-label {
+        color: var(--gold);
+        font-size: 0.66rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .statement-text {
+        max-width: 900px;
+        margin: 0;
+        color: #e4dce7;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2rem, 4.6vw, 4.8rem);
+        font-weight: 400;
+        letter-spacing: -0.045em;
+        line-height: 1.08;
+      }
+
+      .statement-text em {
+        color: var(--rose);
+        font-weight: 400;
+      }
+
+      /* Studio */
+
+      .studio-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 40px;
+        margin-bottom: 70px;
+      }
+
+      .studio-heading .section-copy {
+        max-width: 390px;
+        margin-bottom: 7px;
+      }
+
+      .studio-list {
+        display: grid;
+        border-top: 1px solid var(--line);
+      }
+
+      .studio-item {
+        display: grid;
+        min-width: 0;
+        grid-template-columns: 80px minmax(220px, 0.75fr) minmax(0, 1fr);
+        gap: 28px;
+        padding: 31px 0;
+        border-bottom: 1px solid var(--line);
+        transition:
+          color 180ms ease,
+          padding 180ms ease;
+      }
+
+      .studio-item:hover {
+        padding-left: 8px;
+      }
+
+      .studio-number {
+        color: #514957;
+        font-family: Georgia, serif;
+        font-size: 1.2rem;
+      }
+
+      .studio-item h3 {
+        margin-bottom: 0;
+        color: #ffffff;
+        font-family: Georgia, serif;
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+        font-weight: 400;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+      }
+
+      .studio-item p {
+        max-width: 570px;
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 0.84rem;
+        line-height: 1.8;
+      }
+
+      /* Character authoring */
+
+      .authoring {
+        border-top: 1px solid var(--line-soft);
+        border-bottom: 1px solid var(--line-soft);
+        background: #08060b;
+      }
+
+      .authoring-layout {
+        display: grid;
+        min-width: 0;
+        grid-template-columns: minmax(360px, 0.9fr) minmax(0, 1.1fr);
+        align-items: center;
+        gap: clamp(60px, 9vw, 120px);
+      }
+
+      .dossier {
+        position: relative;
+        min-width: 0;
+        padding: 26px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      }
+
+      .dossier::before {
+        position: absolute;
+        z-index: -1;
+        top: 18px;
+        right: -18px;
+        bottom: -18px;
+        left: 18px;
+        border: 1px solid rgba(213, 132, 186, 0.12);
+        border-radius: var(--radius);
+        content: "";
+      }
+
+      .dossier-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .dossier-person {
+        display: flex;
+        min-width: 0;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .dossier-avatar {
+        display: grid;
+        width: 54px;
+        height: 54px;
+        place-items: center;
+        border: 1px solid rgba(213, 132, 186, 0.24);
+        border-radius: 10px;
+        background:
+          linear-gradient(145deg, rgba(213, 132, 186, 0.18), rgba(99, 50, 121, 0.08)),
+          #16101a;
+        color: #e7bad9;
+        font-family: Georgia, serif;
+        font-size: 1.3rem;
+      }
+
+      .dossier-name {
+        min-width: 0;
+      }
+
+      .dossier-name strong {
+        display: block;
+        color: #ffffff;
+        font-family: Georgia, serif;
+        font-size: 1.1rem;
+        font-weight: 400;
+      }
+
+      .dossier-name span {
+        display: block;
+        margin-top: 3px;
+        color: #6f6674;
+        font-size: 0.58rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .dossier-mark {
+        padding: 5px 8px;
+        border: 1px solid rgba(210, 169, 92, 0.18);
+        border-radius: 999px;
+        color: var(--gold);
+        font-size: 0.52rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .dossier-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .dossier-field {
+        min-width: 0;
+        padding: 13px;
+        border: 1px solid var(--line-soft);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.018);
+      }
+
+      .dossier-field.wide {
+        grid-column: 1 / -1;
+      }
+
+      .dossier-field span {
+        display: block;
+        color: #625a67;
+        font-size: 0.5rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .dossier-field strong {
+        display: block;
+        margin-top: 6px;
+        color: #b7aebd;
+        font-family: Georgia, serif;
+        font-size: 0.73rem;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+
+      .authoring-points {
+        display: grid;
+        gap: 0;
+        margin-top: 36px;
+        border-top: 1px solid var(--line);
+      }
+
+      .authoring-point {
+        display: grid;
+        grid-template-columns: 26px minmax(0, 1fr);
+        gap: 14px;
+        padding: 17px 0;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .authoring-point span {
+        color: var(--gold);
+        font-family: Georgia, serif;
+        font-size: 0.86rem;
+      }
+
+      .authoring-point strong {
+        display: block;
+        color: #e7dfe9;
+        font-size: 0.79rem;
+      }
+
+      .authoring-point p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 0.72rem;
+        line-height: 1.65;
+      }
+
+      /* Privacy */
+
+      .privacy-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: clamp(60px, 10vw, 130px);
+      }
+
+      .privacy-list {
+        display: grid;
+        border-top: 1px solid var(--line);
+      }
+
+      .privacy-item {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .privacy-item strong {
+        color: #e8e1ea;
+        font-size: 0.82rem;
+      }
+
+      .privacy-item span {
+        max-width: 240px;
+        color: var(--muted);
+        font-size: 0.7rem;
+        line-height: 1.6;
+        text-align: right;
+      }
+
+      .privacy-note {
+        margin-top: 25px;
+        color: #625969;
+        font-size: 0.68rem;
+        line-height: 1.7;
+      }
+
+      /* Roadmap and perks */
+
+      .future {
+        border-top: 1px solid var(--line-soft);
+        border-bottom: 1px solid var(--line-soft);
+        background: #08060b;
+      }
+
+      .future-heading {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        align-items: end;
+        gap: 60px;
+        margin-bottom: 52px;
+      }
+
+      .tabs {
+        position: relative;
+      }
+
+      .tabs > input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .tab-labels {
+        display: flex;
+        gap: 25px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .tab-label {
+        position: relative;
+        padding: 0 0 13px;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: color 180ms ease;
+      }
+
+      .tab-label::after {
+        position: absolute;
+        right: 0;
+        bottom: -1px;
+        left: 0;
+        height: 1px;
+        content: "";
+        background: var(--rose);
+        opacity: 0;
+      }
+
+      #roadmap-tab:checked ~ .tab-labels label[for="roadmap-tab"],
+      #perks-tab:checked ~ .tab-labels label[for="perks-tab"] {
+        color: #ffffff;
+      }
+
+      #roadmap-tab:checked ~ .tab-labels label[for="roadmap-tab"]::after,
+      #perks-tab:checked ~ .tab-labels label[for="perks-tab"]::after {
+        opacity: 1;
+      }
+
+      .tab-panel {
+        display: none;
+        padding-top: 34px;
+      }
+
+      #roadmap-tab:checked ~ .tab-panels .roadmap-panel,
+      #perks-tab:checked ~ .tab-panels .perks-panel {
+        display: block;
+      }
+
+      .roadmap-list,
+      .perks-list {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius);
+        background: var(--line-soft);
+      }
+
+      .roadmap-item,
+      .perk-item {
+        min-width: 0;
+        padding: 25px;
+        background: var(--surface);
+      }
+
+      .roadmap-item span,
+      .perk-item span {
+        display: block;
+        margin-bottom: 30px;
+        color: var(--gold);
+        font-size: 0.56rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .roadmap-item h3,
+      .perk-item h3 {
+        margin-bottom: 0;
+        color: #ffffff;
+        font-family: Georgia, serif;
+        font-size: 1.35rem;
+        font-weight: 400;
+        letter-spacing: -0.025em;
+        line-height: 1.2;
+      }
+
+      .roadmap-item p,
+      .perk-item p {
+        margin: 11px 0 0;
+        color: var(--muted);
+        font-size: 0.72rem;
+        line-height: 1.7;
+      }
+
+      .perks-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .perk-item span {
+        margin-bottom: 19px;
+        color: var(--rose);
+      }
+
+      /* Closing */
+
+      .closing {
+        position: relative;
+        padding: 150px 0;
+        overflow: hidden;
+        text-align: center;
+      }
+
+      .closing::before {
+        position: absolute;
+        z-index: -1;
+        top: 50%;
+        left: 50%;
+        width: 520px;
+        max-width: 85vw;
+        aspect-ratio: 1;
+        content: "";
+        background-image: url("noctilai_logo_sans_fond_recadre.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        opacity: 0.055;
+        transform: translate(-50%, -50%);
+      }
+
+      .closing .kicker {
+        justify-content: center;
+      }
+
+      .closing-title {
+        max-width: 10ch;
+        margin: 0 auto;
+        color: #ffffff;
+        font-family: Georgia, serif;
+        font-size: clamp(4rem, 9vw, 9rem);
+        font-weight: 400;
+        letter-spacing: -0.07em;
+        line-height: 0.9;
+      }
+
+      .closing-title em {
+        color: var(--rose);
+        font-weight: 400;
+      }
+
+      .closing p {
+        max-width: 520px;
+        margin: 27px auto 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.8;
+      }
+
+      .closing-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 11px;
+        margin-top: 29px;
+      }
+
+      /* Footer */
+
+      .footer {
+        border-top: 1px solid var(--line-soft);
+      }
+
+      .footer-inner {
+        display: flex;
+        min-height: 104px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+      }
+
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #68606e;
+        font-size: 0.67rem;
+      }
+
+      .footer-brand .brand-logo {
+        width: 30px;
+        height: 30px;
+        opacity: 0.65;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 18px;
+      }
+
+      .footer-link {
+        color: #68606e;
+        font-size: 0.67rem;
+        font-weight: 700;
+        transition: color 180ms ease;
+      }
+
+      .footer-link:hover,
+      .footer-link:focus-visible {
+        color: #ffffff;
+        outline: none;
+      }
+
+      /* Responsive */
+
+      @media (max-width: 1050px) {
+        .hero {
+          min-height: auto;
+        }
+
+        .hero-layout,
+        .authoring-layout {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .hero-title {
+          max-width: 8.5ch;
+        }
+
+        .product-scene {
+          width: min(100%, 680px);
+          margin-top: 25px;
+          transform: none;
+        }
+
+        .privacy-layout,
+        .future-heading {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 36px;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .container {
+          width: min(calc(100% - 30px), var(--container));
+        }
+
+        .section {
+          padding: 94px 0;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .statement-layout,
+        .studio-heading {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 26px;
+        }
+
+        .studio-item {
+          grid-template-columns: 50px minmax(0, 1fr);
+          gap: 18px;
+        }
+
+        .studio-item p {
+          grid-column: 2;
+        }
+
+        .roadmap-list,
+        .perks-list {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .footer-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 27px 0;
+        }
+
+        .footer-links {
+          justify-content: flex-start;
+        }
+      }
+
+      @media (max-width: 600px) {
+        :root {
+          --nav-height: 66px;
+        }
+
+        .brand-logo {
+          width: 37px;
+          height: 37px;
+        }
+
+        .nav-download {
+          width: 38px;
+          padding: 8px;
+          justify-content: center;
+        }
+
+        .nav-download span {
+          display: none;
+        }
+
+        .hero {
+          padding-top: calc(var(--nav-height) + 58px);
+          padding-bottom: 70px;
+        }
+
+        .hero-layout {
+          gap: 50px;
+        }
+
+        .hero-title {
+          max-width: 100%;
+          font-size: clamp(3rem, 13vw, 4.9rem);
+        }
+
+        .hero-description {
+          font-size: 0.94rem;
+        }
+
+        .hero-actions,
+        .closing-actions {
+          display: grid;
+          width: 100%;
+        }
+
+        .button {
+          width: 100%;
+        }
+
+        .hero-footnote {
+          display: grid;
+          gap: 8px;
+        }
+
+        .product-scene {
+          padding: 8px;
+        }
+
+        .scene-window {
+          min-height: 430px;
+          grid-template-columns: 58px minmax(0, 1fr);
+        }
+
+        .scene-sidebar {
+          padding: 9px 7px;
+        }
+
+        .scene-brand {
+          width: 27px;
+          height: 27px;
+        }
+
+        .scene-message {
+          max-width: 95%;
+          font-size: 0.5rem;
+        }
+
+        .scene-caption {
+          display: none;
+        }
+
+        .statement {
+          padding: 70px 0;
+        }
+
+        .statement-text {
+          font-size: clamp(2rem, 11vw, 3.5rem);
+        }
+
+        .studio-item {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 8px;
+          padding: 24px 0;
+        }
+
+        .studio-item p {
+          grid-column: auto;
+        }
+
+        .dossier {
+          padding: 17px;
+        }
+
+        .dossier-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .dossier-field.wide {
+          grid-column: auto;
+        }
+
+        .privacy-item {
+          display: grid;
+          gap: 5px;
+        }
+
+        .privacy-item span {
+          max-width: none;
+          text-align: left;
+        }
+
+        .tab-labels {
+          gap: 16px;
+        }
+
+        .tab-label {
+          font-size: 0.6rem;
+        }
+
+        .closing {
+          padding: 105px 0;
+        }
+
+        .closing-title {
+          font-size: clamp(3.2rem, 15vw, 5.6rem);
+        }
+      }
+
+      /* NoctilAI brand alignment
+         The site keeps its quiet editorial structure, while sharing the
+         material, colors and typography of the desktop application. */
+
+      :root {
+        --ink: #050507;
+        --ink-soft: #08080d;
+        --surface: #12121a;
+        --surface-raised: #1a1625;
+        --line: rgba(124, 93, 160, 0.34);
+        --line-soft: rgba(255, 255, 255, 0.075);
+        --paper: #e2e8f0;
+        --copy: #b9b7c9;
+        --muted: #85839a;
+        --plum: #8b5cf6;
+        --plum-deep: #4c287d;
+        --rose: #d946ef;
+        --gold: #eab308;
+        --green: #67e8f9;
+        --radius: 16px;
+      }
+
+      body {
+        position: relative;
+        background:
+          radial-gradient(ellipse at 17% 3%, rgba(139, 92, 246, 0.15), transparent 31%),
+          radial-gradient(ellipse at 86% 10%, rgba(217, 70, 239, 0.1), transparent 29%),
+          linear-gradient(180deg, #050507 0%, #08070d 44%, #050507 100%);
+        font-family:
+          Inter,
+          Satoshi,
+          "SF Pro Display",
+          "Segoe UI",
+          system-ui,
+          sans-serif;
+      }
+
+      body::before {
+        position: fixed;
+        z-index: -1;
+        inset: 0;
+        content: "";
+        pointer-events: none;
+        background-image:
+          radial-gradient(circle, rgba(226, 232, 240, 0.24) 0 1px, transparent 1px),
+          linear-gradient(rgba(139, 92, 246, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(139, 92, 246, 0.025) 1px, transparent 1px);
+        background-size: 104px 104px, 54px 54px, 54px 54px;
+        mask-image: linear-gradient(to bottom, black, transparent 72%);
+        opacity: 0.42;
+      }
+
+      ::selection {
+        background: rgba(217, 70, 239, 0.35);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border: 2px solid #050507;
+        background: linear-gradient(180deg, rgba(139, 92, 246, 0.78), rgba(217, 70, 239, 0.6));
+      }
+
+      .section {
+        padding: 112px 0;
+      }
+
+      .section-title,
+      .statement-text,
+      .studio-item h3,
+      .dossier-name strong,
+      .dossier-field strong,
+      .roadmap-item h3,
+      .perk-item h3,
+      .closing-title {
+        font-family:
+          Inter,
+          Satoshi,
+          "SF Pro Display",
+          "Segoe UI",
+          system-ui,
+          sans-serif;
+      }
+
+      .section-title {
+        max-width: 14ch;
+        font-size: clamp(2.8rem, 5vw, 5.4rem);
+        font-weight: 850;
+        letter-spacing: -0.055em;
+        line-height: 0.98;
+      }
+
+      .section-title em,
+      .statement-text em,
+      .closing-title em {
+        background: linear-gradient(105deg, #c4b5fd 0%, #e879f9 52%, #f0abfc 100%);
+        color: transparent;
+        font-style: normal;
+        font-weight: inherit;
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      .section-copy {
+        color: var(--copy);
+        line-height: 1.75;
+      }
+
+      .kicker {
+        color: #c4b5fd;
+        letter-spacing: 0.15em;
+      }
+
+      .kicker::before {
+        width: 28px;
+        background: linear-gradient(90deg, #8b5cf6, #d946ef);
+        box-shadow: 0 0 14px rgba(217, 70, 239, 0.45);
+      }
+
+      .button {
+        min-height: 47px;
+        padding: 11px 18px;
+        border-radius: 12px;
+        letter-spacing: 0;
+      }
+
+      .button-primary {
+        border-color: rgba(196, 181, 253, 0.38);
+        background: linear-gradient(110deg, #8b5cf6, #c026d3);
+        box-shadow:
+          0 0 26px rgba(139, 92, 246, 0.22),
+          0 14px 40px rgba(0, 0, 0, 0.38);
+      }
+
+      .button-primary:hover,
+      .button-primary:focus-visible {
+        border-color: rgba(240, 171, 252, 0.62);
+        background: linear-gradient(110deg, #9b6df7, #d13de0);
+        box-shadow:
+          0 0 34px rgba(217, 70, 239, 0.28),
+          0 16px 44px rgba(0, 0, 0, 0.42);
+      }
+
+      .button-secondary {
+        border-color: rgba(124, 93, 160, 0.44);
+        background: rgba(26, 22, 37, 0.72);
+        color: var(--paper);
+        backdrop-filter: blur(14px);
+      }
+
+      .button-secondary:hover,
+      .button-secondary:focus-visible {
+        border-color: rgba(139, 92, 246, 0.64);
+        background: rgba(34, 27, 49, 0.9);
+      }
+
+      .navbar {
+        border-bottom-color: rgba(124, 93, 160, 0.25);
+        background: rgba(5, 5, 7, 0.76);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+        backdrop-filter: blur(24px);
+      }
+
+      .brand {
+        gap: 12px;
+      }
+
+      .brand-logo {
+        width: 50px;
+        max-width: 50px;
+        height: 50px;
+        max-height: 50px;
+        filter:
+          drop-shadow(0 0 9px rgba(217, 70, 239, 0.32))
+          drop-shadow(0 0 18px rgba(139, 92, 246, 0.25));
+      }
+
+      .brand-name {
+        font-size: 1.08rem;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+      }
+
+      .brand-name span {
+        color: #e879f9;
+      }
+
+      .nav-link {
+        color: #9692a8;
+        font-weight: 750;
+      }
+
+      .nav-link::after {
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #8b5cf6, #d946ef);
+        box-shadow: 0 0 12px rgba(217, 70, 239, 0.48);
+      }
+
+      .nav-download {
+        min-height: 40px;
+        padding-inline: 14px;
+        border-color: rgba(139, 92, 246, 0.36);
+        border-radius: 11px;
+        background: rgba(139, 92, 246, 0.1);
+        color: #ddd6fe;
+      }
+
+      .nav-download:hover,
+      .nav-download:focus-visible {
+        border-color: rgba(217, 70, 239, 0.48);
+        background: rgba(139, 92, 246, 0.17);
       }
 
       .hero {
-        margin-top: 36px;
-        margin-bottom: 82px;
+        min-height: min(940px, 100svh);
+        padding-top: calc(var(--nav-height) + 74px);
       }
 
-      .buttons {
-        flex-direction: column;
+      .hero::before {
+        top: 45%;
+        left: 23%;
+        width: min(52vw, 660px);
+        opacity: 0.055;
+        filter: drop-shadow(0 0 45px rgba(139, 92, 246, 0.22));
       }
 
-      .btn {
-        width: 100%;
+      .hero-layout {
+        grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+        gap: clamp(50px, 7vw, 96px);
       }
 
-      .grid,
-      .stats {
-        grid-template-columns: 1fr;
+      .availability {
+        padding: 7px 10px;
+        border: 1px solid rgba(103, 232, 249, 0.22);
+        border-radius: 999px;
+        background: rgba(103, 232, 249, 0.055);
+        color: #b8dce2;
+        letter-spacing: 0.1em;
       }
 
-      .local-section,
-      .download-card {
+      .availability::before {
+        background: #67e8f9;
+        box-shadow: 0 0 12px rgba(103, 232, 249, 0.74);
+      }
+
+      .hero-title {
+        max-width: 10ch;
+        font-family:
+          Inter,
+          Satoshi,
+          "SF Pro Display",
+          "Segoe UI",
+          system-ui,
+          sans-serif;
+        font-size: clamp(4.1rem, 7.7vw, 8rem);
+        font-weight: 900;
+        letter-spacing: -0.07em;
+        line-height: 0.91;
+      }
+
+      .hero-title em {
+        background: linear-gradient(102deg, #c4b5fd 0%, #e879f9 55%, #f0abfc 100%);
+        color: transparent;
+        font-style: normal;
+        font-weight: 900;
+        text-shadow: 0 0 42px rgba(217, 70, 239, 0.14);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      .hero-description {
+        color: #aaa8bb;
+      }
+
+      .hero-footnote {
+        color: #77758b;
+      }
+
+      .hero-footnote span::before {
+        background: #8b5cf6;
+        box-shadow: 0 0 8px rgba(139, 92, 246, 0.65);
+      }
+
+      .product-scene {
+        padding: 10px;
+        border-color: rgba(139, 92, 246, 0.38);
+        border-radius: 20px;
+        background:
+          linear-gradient(145deg, rgba(18, 18, 26, 0.95), rgba(26, 22, 37, 0.82));
+        box-shadow:
+          0 0 58px rgba(139, 92, 246, 0.16),
+          0 34px 100px rgba(0, 0, 0, 0.58),
+          inset 0 1px 0 rgba(255, 255, 255, 0.055);
+        transform: none;
+        backdrop-filter: blur(22px);
+      }
+
+      .product-scene::before {
+        top: 18px;
+        right: -13px;
+        bottom: -13px;
+        left: 18px;
+        border-color: rgba(217, 70, 239, 0.16);
+        border-radius: 20px;
+      }
+
+      .scene-window {
+        min-height: 550px;
+        border-color: rgba(124, 93, 160, 0.24);
+        border-radius: 14px;
+        background: rgba(5, 5, 7, 0.72);
+        grid-template-columns: 112px minmax(0, 1fr);
+      }
+
+      .scene-sidebar {
+        padding: 14px 11px;
+        border-right-color: rgba(124, 93, 160, 0.22);
+        background: rgba(12, 10, 17, 0.88);
+      }
+
+      .scene-brand {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 23px;
+        border: 0;
+        background-image: url("noctilai_logo_sans_fond_recadre.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        color: transparent;
+        font-size: 0;
+        filter: drop-shadow(0 0 9px rgba(217, 70, 239, 0.35));
+      }
+
+      .scene-nav {
+        gap: 8px;
+      }
+
+      .scene-nav-item {
+        height: 31px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .scene-nav-item.active {
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-left: 3px solid #d946ef;
+        background: linear-gradient(100deg, rgba(139, 92, 246, 0.2), rgba(217, 70, 239, 0.08));
+        box-shadow: 0 0 22px rgba(139, 92, 246, 0.13);
+      }
+
+      .scene-sidebar-status {
+        border-color: rgba(103, 232, 249, 0.17);
+        border-radius: 9px;
+        background: rgba(103, 232, 249, 0.04);
+        color: #9ab8c0;
+      }
+
+      .scene-header {
+        padding: 15px 17px;
+        border-bottom-color: rgba(124, 93, 160, 0.21);
+        background: rgba(18, 18, 26, 0.52);
+      }
+
+      .scene-avatar,
+      .dossier-avatar {
+        border-color: rgba(217, 70, 239, 0.32);
+        background: linear-gradient(145deg, rgba(139, 92, 246, 0.3), rgba(217, 70, 239, 0.13));
+        color: #f0abfc;
+        font-family: Inter, "Segoe UI", sans-serif;
+        font-weight: 850;
+        box-shadow: 0 0 22px rgba(139, 92, 246, 0.14);
+      }
+
+      .scene-message {
+        border-radius: 12px;
+        font-family: Inter, "Segoe UI", sans-serif;
+        line-height: 1.6;
+      }
+
+      .scene-message.character {
+        border-color: rgba(139, 92, 246, 0.26);
+        background: linear-gradient(135deg, rgba(26, 22, 37, 0.92), rgba(18, 18, 26, 0.82));
+        color: #d1c9da;
+      }
+
+      .scene-message.user {
+        border-color: rgba(103, 232, 249, 0.2);
+        background: rgba(103, 232, 249, 0.065);
+        color: #c2d5d9;
+      }
+
+      .scene-composer {
+        border-color: rgba(124, 93, 160, 0.36);
+        border-radius: 11px;
+        background: rgba(5, 5, 7, 0.56);
+        color: #79758a;
+      }
+
+      .scene-caption {
+        color: #868198;
+        letter-spacing: 0.1em;
+      }
+
+      .statement,
+      .authoring,
+      .future {
+        border-color: rgba(124, 93, 160, 0.22);
+        background:
+          linear-gradient(145deg, rgba(18, 18, 26, 0.76), rgba(26, 22, 37, 0.46));
+      }
+
+      .statement {
+        padding: 82px 0;
+      }
+
+      .statement-label {
+        color: #c4b5fd;
+      }
+
+      .statement-text {
+        max-width: 930px;
+        color: var(--paper);
+        font-size: clamp(2.1rem, 4.4vw, 4.5rem);
+        font-weight: 850;
+        letter-spacing: -0.055em;
+        line-height: 1.05;
+      }
+
+      .studio-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        border-top: 0;
+      }
+
+      .studio-item {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 11px 17px;
         padding: 24px;
+        border: 1px solid rgba(124, 93, 160, 0.24);
+        border-radius: 15px;
+        background: linear-gradient(145deg, rgba(18, 18, 26, 0.82), rgba(26, 22, 37, 0.54));
+        box-shadow:
+          0 20px 52px rgba(0, 0, 0, 0.23),
+          inset 0 1px 0 rgba(255, 255, 255, 0.035);
+        transition:
+          border-color 180ms ease,
+          transform 180ms ease,
+          box-shadow 180ms ease;
+      }
+
+      .studio-item:hover {
+        padding-left: 24px;
+        border-color: rgba(217, 70, 239, 0.3);
+        box-shadow:
+          0 0 34px rgba(139, 92, 246, 0.11),
+          0 24px 56px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .studio-number {
+        color: #a78bfa;
+        font-family: Inter, "Segoe UI", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 850;
+      }
+
+      .studio-item h3 {
+        font-size: clamp(1.25rem, 2vw, 1.7rem);
+        font-weight: 820;
+        letter-spacing: -0.035em;
+      }
+
+      .studio-item p {
+        grid-column: 2;
+        margin-top: 0;
+        color: #8f8ba0;
+      }
+
+      .dossier {
+        border-color: rgba(139, 92, 246, 0.34);
+        border-radius: 18px;
+        background: linear-gradient(145deg, rgba(18, 18, 26, 0.95), rgba(26, 22, 37, 0.76));
+        box-shadow:
+          0 0 44px rgba(139, 92, 246, 0.1),
+          0 30px 80px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.045);
+      }
+
+      .dossier::before {
+        border-color: rgba(217, 70, 239, 0.13);
+        border-radius: 18px;
+      }
+
+      .dossier-name strong {
+        font-weight: 850;
+      }
+
+      .dossier-mark {
+        border-color: rgba(234, 179, 8, 0.24);
+        background: rgba(234, 179, 8, 0.055);
+      }
+
+      .dossier-field {
+        border-color: rgba(124, 93, 160, 0.2);
+        border-radius: 11px;
+        background: rgba(5, 5, 7, 0.35);
+      }
+
+      .dossier-field strong {
+        color: #c3bfd0;
+        font-weight: 600;
+      }
+
+      .authoring-point span {
+        color: #a78bfa;
+        font-family: Inter, "Segoe UI", sans-serif;
+        font-weight: 850;
+      }
+
+      .privacy-item {
+        padding: 21px 16px;
+        border-color: rgba(124, 93, 160, 0.18);
+        transition:
+          background 180ms ease,
+          border-color 180ms ease;
+      }
+
+      .privacy-item:hover {
+        border-color: rgba(139, 92, 246, 0.3);
+        background: rgba(139, 92, 246, 0.04);
+      }
+
+      .tab-label::after {
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #8b5cf6, #d946ef);
+        box-shadow: 0 0 14px rgba(217, 70, 239, 0.4);
+      }
+
+      .roadmap-list,
+      .perks-list {
+        gap: 12px;
+        overflow: visible;
+        border: 0;
+        background: transparent;
+      }
+
+      .roadmap-item,
+      .perk-item {
+        border: 1px solid rgba(124, 93, 160, 0.24);
+        border-radius: 15px;
+        background: linear-gradient(145deg, rgba(18, 18, 26, 0.88), rgba(26, 22, 37, 0.62));
+        box-shadow:
+          0 20px 52px rgba(0, 0, 0, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.035);
+      }
+
+      .roadmap-item span {
+        color: #c4b5fd;
+      }
+
+      .perk-item span {
+        color: #e879f9;
+      }
+
+      .roadmap-item h3,
+      .perk-item h3 {
+        font-weight: 820;
+      }
+
+      .closing::before {
+        opacity: 0.09;
+        filter: drop-shadow(0 0 38px rgba(217, 70, 239, 0.27));
+      }
+
+      .closing-title {
+        max-width: 11ch;
+        font-size: clamp(3.8rem, 8vw, 8rem);
+        font-weight: 900;
+        letter-spacing: -0.07em;
+        line-height: 0.94;
       }
 
       .footer {
-        flex-direction: column;
+        border-top-color: rgba(124, 93, 160, 0.23);
+        background: rgba(5, 5, 7, 0.65);
       }
-    }
-  </style>
-</head>
 
-<body>
-  <header class="navbar">
-    <a href="#" class="brand">
-      <div class="logo-box" aria-label="NoctilAI logo"></div>
-      <span class="brand-name">NoctilAI</span>
-    </a>
+      .footer-brand .brand-logo {
+        opacity: 0.85;
+      }
 
-    <nav class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#local">Local AI</a>
-      <a href="#download">Download</a>
-      <a href="https://discord.gg/CDWfEBv7RR" target="_blank" rel="noopener">Discord</a>
-    </nav>
-  </header>
+      @media (max-width: 1050px) {
+        .hero-layout {
+          grid-template-columns: minmax(0, 1fr);
+        }
 
-  <main>
-    <section class="hero">
-      <div>
-        <p class="eyebrow">Private • Local • Immersive</p>
+        .hero-title {
+          max-width: 9.5ch;
+        }
+      }
 
-        <h1>
-        AI roleplay,<br>
-         running <span>100% locally</span><br>
-        on your own<br>
-        device.
-        </h1>
+      @media (max-width: 820px) {
+        .section {
+          padding: 88px 0;
+        }
 
-        <p class="hero-description">
-          NoctilAI is a local AI roleplay application designed for immersive conversations,
-          character creation and full privacy. Your characters, chats and AI models stay on your machine.
-        </p>
+        .studio-list {
+          grid-template-columns: minmax(0, 1fr);
+        }
 
-        <div class="buttons">
-          <a
-            class="btn btn-primary"
-            href="https://github.com/NoctilAI/NoctilAI.github.io/releases/latest"
-            target="_blank"
-            rel="noopener"
-          >
-            Download latest release
-          </a>
+        .studio-item p {
+          grid-column: 2;
+        }
+      }
 
-          <a
-            class="btn btn-secondary"
-            href="https://discord.gg/CDWfEBv7RR"
-            target="_blank"
-            rel="noopener"
-          >
-            Join Discord
-          </a>
-        </div>
+      @media (max-width: 560px) {
+        .brand-logo {
+          width: 44px;
+          height: 44px;
+        }
 
-        <div class="badges">
-          <span>GGUF support</span>
-          <span>No cloud required</span>
-          <span>Privacy-first</span>
-        </div>
+        .hero-title {
+          font-size: clamp(3.2rem, 15vw, 4.7rem);
+        }
+
+        .section-title {
+          font-size: clamp(2.55rem, 12vw, 4rem);
+        }
+
+        .studio-item {
+          grid-template-columns: 32px minmax(0, 1fr);
+          padding: 20px;
+        }
+
+        .studio-item:hover {
+          padding-left: 20px;
+        }
+      }
+
+      /* Refined light, motion and component details */
+
+      @keyframes noctil-breathe {
+        0%,
+        100% {
+          opacity: 0.55;
+          transform: translate3d(0, 0, 0);
+        }
+
+        50% {
+          opacity: 0.9;
+          transform: translate3d(0, -5px, 0);
+        }
+      }
+
+      @keyframes noctil-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 7px rgba(103, 232, 249, 0.48);
+        }
+
+        50% {
+          box-shadow: 0 0 15px rgba(103, 232, 249, 0.82);
+        }
+      }
+
+      .navbar::after {
+        position: absolute;
+        right: 0;
+        bottom: -1px;
+        left: 0;
+        height: 1px;
+        content: "";
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent 8%, rgba(139, 92, 246, 0.35), rgba(217, 70, 239, 0.26), transparent 92%);
+      }
+
+      .hero::after {
+        position: absolute;
+        z-index: -1;
+        top: 19%;
+        right: -15%;
+        width: 60%;
+        height: 54%;
+        content: "";
+        pointer-events: none;
+        background: linear-gradient(122deg, transparent 18%, rgba(139, 92, 246, 0.08) 48%, rgba(217, 70, 239, 0.035) 58%, transparent 78%);
+        filter: blur(24px);
+        transform: skewY(-7deg);
+      }
+
+      .button,
+      .nav-download {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      .button::after,
+      .nav-download::after {
+        position: absolute;
+        z-index: -1;
+        top: -120%;
+        bottom: -120%;
+        left: -45%;
+        width: 32%;
+        content: "";
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        opacity: 0;
+        transform: rotate(18deg);
+        transition:
+          left 420ms ease,
+          opacity 180ms ease;
+      }
+
+      .button:hover::after,
+      .button:focus-visible::after,
+      .nav-download:hover::after,
+      .nav-download:focus-visible::after {
+        left: 115%;
+        opacity: 0.72;
+      }
+
+      .availability {
+        box-shadow:
+          0 0 22px rgba(103, 232, 249, 0.07),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .availability::before,
+      .scene-ready i {
+        animation: noctil-pulse 2.8s ease-in-out infinite;
+      }
+
+      .product-scene {
+        transition:
+          border-color 320ms ease,
+          box-shadow 320ms ease,
+          transform 320ms ease;
+      }
+
+      .product-scene:hover {
+        border-color: rgba(217, 70, 239, 0.46);
+        box-shadow:
+          0 0 74px rgba(139, 92, 246, 0.22),
+          0 38px 110px rgba(0, 0, 0, 0.62),
+          inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        transform: translateY(-4px);
+      }
+
+      .product-scene::after {
+        position: absolute;
+        z-index: 2;
+        top: -1px;
+        right: 14%;
+        left: 14%;
+        height: 1px;
+        content: "";
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent, #8b5cf6, #d946ef, transparent);
+        box-shadow: 0 0 22px rgba(217, 70, 239, 0.52);
+      }
+
+      .scene-window {
+        position: relative;
+      }
+
+      .scene-window::after {
+        position: absolute;
+        right: 13px;
+        bottom: 7px;
+        width: 42%;
+        height: 1px;
+        content: "";
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.18), transparent);
+      }
+
+      .scene-nav-item {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .scene-nav-item::before,
+      .scene-nav-item::after {
+        position: absolute;
+        top: 50%;
+        height: 5px;
+        border-radius: 999px;
+        content: "";
+        background: rgba(180, 173, 197, 0.18);
+        transform: translateY(-50%);
+      }
+
+      .scene-nav-item::before {
+        left: 9px;
+        width: 5px;
+      }
+
+      .scene-nav-item::after {
+        right: 9px;
+        left: 21px;
+      }
+
+      .scene-nav-item.active::before {
+        background: #e879f9;
+        box-shadow: 0 0 9px rgba(217, 70, 239, 0.58);
+      }
+
+      .scene-nav-item.active::after {
+        background: rgba(226, 232, 240, 0.38);
+      }
+
+      .scene-person {
+        flex: 1;
+      }
+
+      .scene-ready {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 7px;
+        border: 1px solid rgba(103, 232, 249, 0.15);
+        border-radius: 999px;
+        background: rgba(103, 232, 249, 0.04);
+        color: #9cbec4;
+        font-size: 0.43rem;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .scene-ready i {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #67e8f9;
+      }
+
+      .scene-message {
+        box-shadow:
+          0 12px 28px rgba(0, 0, 0, 0.16),
+          inset 0 1px 0 rgba(255, 255, 255, 0.025);
+        transition:
+          border-color 180ms ease,
+          transform 180ms ease;
+      }
+
+      .scene-message:hover {
+        border-color: rgba(217, 70, 239, 0.32);
+        transform: translateY(-1px);
+      }
+
+      .scene-composer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 7px 7px 7px 11px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+      }
+
+      .scene-composer i {
+        display: grid;
+        width: 24px;
+        height: 24px;
+        place-items: center;
+        border-radius: 7px;
+        background: linear-gradient(135deg, #8b5cf6, #c026d3);
+        color: #ffffff;
+        font-size: 0.65rem;
+        font-style: normal;
+        font-weight: 900;
+        box-shadow: 0 0 17px rgba(139, 92, 246, 0.24);
+      }
+
+      .statement {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .statement::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 5px;
+        content: "";
+        background: linear-gradient(180deg, transparent, #8b5cf6 32%, #d946ef 68%, transparent);
+        box-shadow: 0 0 30px rgba(217, 70, 239, 0.28);
+      }
+
+      .statement::after {
+        position: absolute;
+        z-index: 0;
+        top: 50%;
+        right: -7%;
+        width: min(55vw, 680px);
+        aspect-ratio: 1;
+        content: "";
+        pointer-events: none;
+        background-image: url("noctilai_logo_sans_fond_recadre.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        filter: saturate(0.72) blur(0.5px);
+        mask-image: linear-gradient(90deg, transparent 0%, black 42%, black 100%);
+        opacity: 0.022;
+        transform: translateY(-50%);
+      }
+
+      .statement-layout {
+        position: relative;
+        z-index: 1;
+        grid-template-columns: minmax(170px, 0.32fr) minmax(0, 1fr);
+        align-items: stretch;
+        gap: clamp(45px, 7vw, 100px);
+      }
+
+      .statement-side {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 36px;
+        padding: 9px 0 8px;
+      }
+
+      .statement-index {
+        max-width: 130px;
+        color: #625e73;
+        font-size: 0.57rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        line-height: 1.6;
+        text-transform: uppercase;
+      }
+
+      .statement-main {
+        display: grid;
+        gap: 0;
+      }
+
+      .statement-support {
+        max-width: 620px;
+        margin: 23px 0 0;
+        color: #8f8ba0;
+        font-size: 0.86rem;
+        line-height: 1.75;
+      }
+
+      .statement-facts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 35px;
+      }
+
+      .statement-fact {
+        position: relative;
+        min-width: 0;
+        padding: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(124, 93, 160, 0.22);
+        border-radius: 13px;
+        background: rgba(5, 5, 7, 0.27);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+      }
+
+      .statement-fact::before {
+        display: block;
+        width: 18px;
+        height: 2px;
+        margin-bottom: 16px;
+        border-radius: 999px;
+        content: "";
+        background: linear-gradient(90deg, #8b5cf6, #d946ef);
+        box-shadow: 0 0 10px rgba(217, 70, 239, 0.28);
+      }
+
+      .statement-fact strong,
+      .statement-fact span {
+        display: block;
+      }
+
+      .statement-fact strong {
+        color: #ded9e8;
+        font-size: 0.72rem;
+        font-weight: 850;
+      }
+
+      .statement-fact span {
+        margin-top: 6px;
+        color: #777287;
+        font-size: 0.61rem;
+        line-height: 1.55;
+      }
+
+      .studio-item,
+      .dossier,
+      .roadmap-item,
+      .perk-item {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .studio-item::before,
+      .dossier::after,
+      .roadmap-item::before,
+      .perk-item::before {
+        position: absolute;
+        top: 0;
+        right: 18%;
+        left: 18%;
+        height: 1px;
+        content: "";
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.54), rgba(217, 70, 239, 0.32), transparent);
+        opacity: 0.52;
+      }
+
+      .studio-item::after,
+      .roadmap-item::after,
+      .perk-item::after {
+        position: absolute;
+        top: -90px;
+        right: -120px;
+        width: 210px;
+        height: 120px;
+        content: "";
+        pointer-events: none;
+        background: linear-gradient(130deg, transparent 20%, rgba(217, 70, 239, 0.055), transparent 74%);
+        transform: rotate(18deg);
+        transition: transform 300ms ease;
+      }
+
+      .studio-item:hover::after,
+      .roadmap-item:hover::after,
+      .perk-item:hover::after {
+        transform: translate(-26px, 18px) rotate(18deg);
+      }
+
+      .dossier-field {
+        transition:
+          border-color 180ms ease,
+          background 180ms ease,
+          transform 180ms ease;
+      }
+
+      .dossier-field:hover {
+        border-color: rgba(139, 92, 246, 0.38);
+        background: rgba(139, 92, 246, 0.045);
+        transform: translateY(-1px);
+      }
+
+      .authoring-point {
+        transition:
+          padding 180ms ease,
+          background 180ms ease;
+      }
+
+      .authoring-point:hover {
+        padding-right: 10px;
+        padding-left: 10px;
+        background: rgba(139, 92, 246, 0.035);
+      }
+
+      .privacy-list {
+        gap: 9px;
+        border-top: 0;
+      }
+
+      .privacy-item {
+        display: grid;
+        grid-template-columns: 25px minmax(140px, 0.7fr) minmax(180px, 1fr);
+        align-items: center;
+        gap: 13px;
+        padding: 17px;
+        border: 1px solid rgba(124, 93, 160, 0.2);
+        border-radius: 13px;
+        background: linear-gradient(145deg, rgba(18, 18, 26, 0.66), rgba(26, 22, 37, 0.42));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+      }
+
+      .privacy-item::before {
+        display: grid;
+        width: 23px;
+        height: 23px;
+        place-items: center;
+        border: 1px solid rgba(139, 92, 246, 0.32);
+        border-radius: 7px;
+        content: "✓";
+        background: rgba(139, 92, 246, 0.1);
+        color: #c4b5fd;
+        font-size: 0.63rem;
+        font-weight: 900;
+        box-shadow: 0 0 16px rgba(139, 92, 246, 0.08);
+      }
+
+      .privacy-item span {
+        max-width: none;
+      }
+
+      .roadmap-item,
+      .perk-item {
+        transition:
+          border-color 180ms ease,
+          box-shadow 180ms ease,
+          transform 180ms ease;
+      }
+
+      .roadmap-item:hover,
+      .perk-item:hover {
+        border-color: rgba(217, 70, 239, 0.3);
+        box-shadow:
+          0 0 30px rgba(139, 92, 246, 0.09),
+          0 24px 58px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .future-intro {
+        max-width: 620px;
+        margin-top: 0;
+      }
+
+      .future-heading {
+        grid-template-columns: minmax(360px, 0.82fr) minmax(440px, 1.18fr);
+        align-items: stretch;
+        gap: clamp(55px, 8vw, 120px);
+        margin-bottom: 76px;
+      }
+
+      .future-heading .section-title {
+        max-width: 11ch;
+      }
+
+      .future-summary {
+        display: grid;
+        align-content: end;
+        gap: 25px;
+        padding: 24px;
+        border: 1px solid rgba(124, 93, 160, 0.22);
+        border-radius: 16px;
+        background: linear-gradient(145deg, rgba(18, 18, 26, 0.68), rgba(26, 22, 37, 0.42));
+        box-shadow:
+          0 20px 54px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+
+      .future-signals {
+        display: grid;
+        gap: 7px;
+      }
+
+      .future-signal {
+        display: grid;
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 12px;
+        padding: 11px 12px;
+        border: 1px solid rgba(124, 93, 160, 0.16);
+        border-radius: 10px;
+        background: rgba(5, 5, 7, 0.26);
+      }
+
+      .future-signal.supporter {
+        border-color: rgba(217, 70, 239, 0.25);
+        background: linear-gradient(100deg, rgba(139, 92, 246, 0.09), rgba(217, 70, 239, 0.045));
+      }
+
+      .future-signal > span {
+        color: #a78bfa;
+        font-size: 0.58rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+
+      .future-signal strong,
+      .future-signal small {
+        display: block;
+      }
+
+      .future-signal strong {
+        color: #dfdbe7;
+        font-size: 0.72rem;
+        font-weight: 850;
+      }
+
+      .future-signal small {
+        margin-top: 3px;
+        color: #767184;
+        font-size: 0.59rem;
+        line-height: 1.45;
+      }
+
+      .future-stack {
+        display: grid;
+        gap: 64px;
+      }
+
+      .future-block {
+        display: grid;
+        gap: 25px;
+      }
+
+      .future-block-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 40px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(124, 93, 160, 0.26);
+      }
+
+      .future-block-heading h3 {
+        max-width: 700px;
+        margin: 0;
+        color: var(--paper);
+        font-size: clamp(1.8rem, 3.2vw, 3rem);
+        font-weight: 850;
+        letter-spacing: -0.045em;
+        line-height: 1.05;
+      }
+
+      .future-block-heading p {
+        max-width: 450px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.7;
+      }
+
+      .block-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+        color: #c4b5fd;
+        font-size: 0.61rem;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .block-label::before {
+        width: 20px;
+        height: 1px;
+        content: "";
+        background: linear-gradient(90deg, #8b5cf6, #d946ef);
+        box-shadow: 0 0 10px rgba(217, 70, 239, 0.35);
+      }
+
+      .roadmap-item {
+        min-height: 235px;
+      }
+
+      .roadmap-item span {
+        display: inline-flex;
+        width: max-content;
+        margin-bottom: 36px;
+        padding: 5px 8px;
+        border: 1px solid rgba(139, 92, 246, 0.24);
+        border-radius: 999px;
+        background: rgba(139, 92, 246, 0.07);
+      }
+
+      .roadmap-item:nth-child(1) span {
+        border-color: rgba(103, 232, 249, 0.22);
+        background: rgba(103, 232, 249, 0.055);
+        color: #a9d6dd;
+      }
+
+      .supporter-showcase {
+        position: relative;
+        display: grid;
+        gap: 28px;
+        overflow: hidden;
+        padding: 30px;
+        border: 1px solid rgba(217, 70, 239, 0.3);
+        border-radius: 20px;
+        background:
+          linear-gradient(145deg, rgba(30, 21, 44, 0.9), rgba(18, 18, 26, 0.82));
+        box-shadow:
+          0 0 48px rgba(139, 92, 246, 0.12),
+          0 28px 74px rgba(0, 0, 0, 0.32),
+          inset 0 1px 0 rgba(255, 255, 255, 0.055);
+      }
+
+      .supporter-showcase::before {
+        position: absolute;
+        top: 0;
+        right: 12%;
+        left: 12%;
+        height: 1px;
+        content: "";
+        background: linear-gradient(90deg, transparent, #8b5cf6, #d946ef, transparent);
+        box-shadow: 0 0 24px rgba(217, 70, 239, 0.5);
+      }
+
+      .supporter-showcase::after {
+        position: absolute;
+        right: -11%;
+        bottom: -72%;
+        width: min(40vw, 480px);
+        aspect-ratio: 1;
+        content: "";
+        pointer-events: none;
+        background-image: url("noctilai_logo_sans_fond_recadre.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        opacity: 0.035;
+        filter: saturate(0.75);
+      }
+
+      .supporter-heading,
+      .supporter-tiers {
+        position: relative;
+        z-index: 1;
+      }
+
+      .supporter-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+      }
+
+      .supporter-heading h3 {
+        max-width: 620px;
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(2rem, 4vw, 3.8rem);
+        font-weight: 900;
+        letter-spacing: -0.055em;
+        line-height: 1;
+      }
+
+      .supporter-heading h3 em {
+        background: linear-gradient(105deg, #c4b5fd, #e879f9);
+        color: transparent;
+        font-style: normal;
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      .supporter-heading p {
+        max-width: 470px;
+        margin: 14px 0 0;
+        color: #a29eb2;
+        font-size: 0.78rem;
+        line-height: 1.7;
+      }
+
+      .supporter-tiers {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .supporter-tier {
+        min-width: 0;
+        padding: 22px;
+        border: 1px solid rgba(124, 93, 160, 0.28);
+        border-radius: 15px;
+        background: rgba(5, 5, 7, 0.38);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+
+      .supporter-tier.featured {
+        border-color: rgba(217, 70, 239, 0.42);
+        background: linear-gradient(140deg, rgba(139, 92, 246, 0.13), rgba(217, 70, 239, 0.07));
+        box-shadow:
+          0 0 30px rgba(139, 92, 246, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.045);
+      }
+
+      .tier-name {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(124, 93, 160, 0.2);
+      }
+
+      .tier-name strong {
+        color: #ffffff;
+        font-size: 1.08rem;
+        font-weight: 850;
+      }
+
+      .tier-name span {
+        padding: 5px 8px;
+        border: 1px solid rgba(234, 179, 8, 0.24);
+        border-radius: 999px;
+        background: rgba(234, 179, 8, 0.05);
+        color: #eacb6f;
+        font-size: 0.5rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .tier-list {
+        display: grid;
+        gap: 10px;
+        margin: 17px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .tier-list li {
+        display: grid;
+        grid-template-columns: 16px minmax(0, 1fr);
+        gap: 8px;
+        color: #aaa6b8;
+        font-size: 0.71rem;
+        line-height: 1.55;
+      }
+
+      .tier-list li::before {
+        color: #c4b5fd;
+        content: "✓";
+        font-weight: 900;
+      }
+
+      .closing {
+        background:
+          linear-gradient(180deg, transparent, rgba(139, 92, 246, 0.035) 48%, transparent);
+      }
+
+      @media (max-width: 820px) {
+        .statement-layout {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 30px;
+        }
+
+        .statement-side {
+          display: block;
+          padding: 0;
+        }
+
+        .statement-index {
+          display: none;
+        }
+
+        .statement-facts {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .future-heading {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 32px;
+          margin-bottom: 58px;
+        }
+
+        .privacy-item {
+          grid-template-columns: 25px minmax(0, 1fr);
+        }
+
+        .privacy-item span {
+          grid-column: 2;
+          text-align: left;
+        }
+
+        .future-block-heading,
+        .supporter-heading {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .supporter-tiers {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      @media (max-width: 560px) {
+        .hero::after {
+          right: -40%;
+          width: 120%;
+        }
+
+        .product-scene:hover {
+          transform: none;
+        }
+
+        .scene-ready {
+          display: none;
+        }
+
+        .statement::before {
+          width: 3px;
+        }
+
+        .statement::after {
+          display: none;
+        }
+
+        .statement-fact {
+          padding: 14px;
+        }
+
+        .future-summary {
+          padding: 16px;
+        }
+
+        .supporter-showcase {
+          padding: 20px;
+        }
+
+        .supporter-showcase::after {
+          display: none;
+        }
+
+        .studio-item {
+          grid-template-columns: 32px minmax(0, 1fr);
+        }
+
+        .studio-item p {
+          grid-column: 2;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="navbar">
+      <div class="container nav-inner">
+        <a class="brand" href="#top" aria-label="NoctilAI home">
+          <div class="brand-logo" aria-hidden="true"></div>
+          <div class="brand-name">Noctil<span>AI</span></div>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a class="nav-link" href="#studio">The studio</a>
+          <a class="nav-link" href="#characters">Characters</a>
+          <a class="nav-link" href="#privacy">Local-first</a>
+          <a class="nav-link" href="#future">Roadmap</a>
+        </nav>
+
+        <a
+          class="nav-download"
+          href="https://github.com/your-username/noctilai/releases/latest"
+          aria-label="Download NoctilAI"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3V15M12 15L7 10M12 15L17 10M5 20H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Download</span>
+        </a>
       </div>
+    </header>
 
-      <div class="preview-card">
-        <div class="window-bar">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+    <main>
+      <section class="hero" id="top">
+        <div class="container hero-layout">
+          <div class="hero-copy">
+            <div class="availability">Available for Windows</div>
 
-        <div class="chat-preview">
-          <div class="message message-user">
-            Create a mysterious character for a dark fantasy roleplay.
-          </div>
+            <h1 class="hero-title">
+              Your stories.
+              <em>Your machine.</em>
+            </h1>
 
-          <div class="message message-ai">
-            Character created locally. No data was sent to external servers.
-          </div>
+            <p class="hero-description">
+              NoctilAI is a local roleplay studio for creating characters
+              worth remembering and scenes you can return to.
+              <strong>Your stories are stored on your computer, not in a cloud.</strong>
+            </p>
 
-          <div class="stats">
-            <div>
-              <strong>Model</strong>
-              <p>Local GGUF</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="https://github.com/your-username/noctilai/releases/latest">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 3V15M12 15L7 10M12 15L17 10M5 20H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Download NoctilAI
+              </a>
+              <a class="button button-secondary" href="https://discord.gg/your-invite">Join the community</a>
             </div>
 
-            <div>
-              <strong>Connection</strong>
-              <p>Offline-ready</p>
+            <div class="hero-footnote">
+              <span>Stored locally</span>
+              <span>Works offline</span>
+              <span>Your choice of model</span>
             </div>
+          </div>
 
-            <div>
-              <strong>Privacy</strong>
-              <p>100% local</p>
+          <div class="product-scene" aria-label="Preview of a local NoctilAI roleplay scene">
+            <div class="scene-window">
+              <aside class="scene-sidebar">
+                <div class="scene-brand">N</div>
+                <div class="scene-nav" aria-hidden="true">
+                  <div class="scene-nav-item active"></div>
+                  <div class="scene-nav-item"></div>
+                  <div class="scene-nav-item"></div>
+                  <div class="scene-nav-item"></div>
+                </div>
+                <div class="scene-sidebar-status">Local</div>
+              </aside>
+
+              <div class="scene-main">
+                <div class="scene-header">
+                  <div class="scene-avatar">E</div>
+                  <div class="scene-person">
+                    <strong>Elena</strong>
+                    <span>The Last Train North</span>
+                  </div>
+                  <div class="scene-ready"><i></i> Ready</div>
+                </div>
+
+                <div class="scene-chat">
+                  <div class="scene-message character">
+                    The station clock had stopped at midnight. Elena looked
+                    beyond the glass, where the snow erased everything it touched.
+                  </div>
+                  <div class="scene-message user">
+                    “You knew the train would never come, didn't you?”
+                  </div>
+                  <div class="scene-message character">
+                    She smiled without turning around. “I knew you would.”
+                  </div>
+                </div>
+
+                <div class="scene-composer">
+                  <span>Continue the scene...</span>
+                  <i aria-hidden="true">↑</i>
+                </div>
+              </div>
+            </div>
+            <div class="scene-caption">Saved on your machine</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="statement">
+        <div class="container statement-layout">
+          <div class="statement-side">
+            <div class="statement-label">Why NoctilAI</div>
+            <div class="statement-index">Local-first roleplay</div>
+          </div>
+          <div class="statement-main">
+            <p class="statement-text">
+              Roleplay feels different when it
+              <em>isn't stored in a cloud.</em>
+            </p>
+            <p class="statement-support">
+              Your characters, worlds and conversations stay together on the
+              computer where you write them. Simple, portable and always within reach.
+            </p>
+            <div class="statement-facts">
+              <div class="statement-fact">
+                <strong>On your computer</strong>
+                <span>Your library stays beside the app.</span>
+              </div>
+              <div class="statement-fact">
+                <strong>Available offline</strong>
+                <span>Continue scenes without a connection.</span>
+              </div>
+              <div class="statement-fact">
+                <strong>Easy to move</strong>
+                <span>Export and back up your characters.</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section" id="features">
-      <div class="section-title">
-        <p class="eyebrow">Features</p>
-        <h2>Built for immersive local roleplay</h2>
-        <p>
-          NoctilAI gives you control over your AI experience without depending on cloud platforms.
-        </p>
-      </div>
+      <section class="section" id="studio">
+        <div class="container">
+          <div class="studio-heading">
+            <div>
+              <div class="kicker">The studio</div>
+              <h2 class="section-title">
+                Made for the story,
+                <em>not the spectacle.</em>
+              </h2>
+            </div>
+            <p class="section-copy">
+              A focused writing space for characters, conversations and
+              worlds. No social feed. No endless dashboard. No unnecessary noise.
+            </p>
+          </div>
 
-      <div class="grid">
-        <article class="card">
-          <h3>Character creation</h3>
-          <p>Create and organize your own roleplay characters with personality, scenario and greeting settings.</p>
-        </article>
+          <div class="studio-list">
+            <article class="studio-item">
+              <div class="studio-number">01</div>
+              <h3>Build someone believable.</h3>
+              <p>
+                Shape personality, voice, history, habits and relationships.
+                Give every character enough detail to stay consistent beyond
+                the first few messages.
+              </p>
+            </article>
 
-        <article class="card">
-          <h3>Local conversations</h3>
-          <p>Your chats stay on your device, keeping your roleplay sessions private and under your control.</p>
-        </article>
+            <article class="studio-item">
+              <div class="studio-number">02</div>
+              <h3>Write scenes that continue.</h3>
+              <p>
+                Return to recent conversations, revise your own messages and
+                regenerate responses without losing the thread of the story.
+              </p>
+            </article>
 
-        <article class="card">
-          <h3>GGUF model support</h3>
-          <p>Use compatible local AI models and adjust generation settings depending on your hardware.</p>
-        </article>
+            <article class="studio-item">
+              <div class="studio-number">03</div>
+              <h3>Carry worlds between characters.</h3>
+              <p>
+                Create reusable lore for places, rules and shared histories,
+                then bring a different character into the same universe.
+              </p>
+            </article>
 
-        <article class="card">
-          <h3>Modern dark interface</h3>
-          <p>A clean, premium and immersive interface designed for long writing and roleplay sessions.</p>
-        </article>
+            <article class="studio-item">
+              <div class="studio-number">04</div>
+              <h3>Choose who you are in the scene.</h3>
+              <p>
+                RP Profiles describe the role you want to play, so characters
+                can respond to you with more continuity and intention.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
 
-        <article class="card">
-          <h3>No forced cloud</h3>
-          <p>NoctilAI is designed to work locally, without sending your conversations to online AI providers.</p>
-        </article>
+      <section class="section authoring" id="characters">
+        <div class="container authoring-layout">
+          <div class="dossier" aria-label="Character dossier preview">
+            <div class="dossier-top">
+              <div class="dossier-person">
+                <div class="dossier-avatar">M</div>
+                <div class="dossier-name">
+                  <strong>Mara Voss</strong>
+                  <span>Character dossier</span>
+                </div>
+              </div>
+              <div class="dossier-mark">Draft</div>
+            </div>
 
-        <article class="card">
-          <h3>Community sharing</h3>
-          <p>Join the Discord community to share characters, feedback, ideas and development updates.</p>
-        </article>
-      </div>
-    </section>
+            <div class="dossier-grid">
+              <div class="dossier-field">
+                <span>Role</span>
+                <strong>Private investigator</strong>
+              </div>
+              <div class="dossier-field">
+                <span>Voice</span>
+                <strong>Quiet, precise, dry</strong>
+              </div>
+              <div class="dossier-field wide">
+                <span>Personality</span>
+                <strong>
+                  Observant and guarded. She rarely asks a question without
+                  already knowing half of the answer.
+                </strong>
+              </div>
+              <div class="dossier-field">
+                <span>Motivation</span>
+                <strong>Find what others hide</strong>
+              </div>
+              <div class="dossier-field">
+                <span>Weakness</span>
+                <strong>Trust comes too late</strong>
+              </div>
+              <div class="dossier-field wide">
+                <span>Opening scene</span>
+                <strong>
+                  Rain on the hotel windows. A sealed room. One missing guest.
+                </strong>
+              </div>
+            </div>
+          </div>
 
-    <section class="local-section" id="local">
-      <div>
-        <p class="eyebrow">100% Local</p>
-        <h2>Your AI. Your device. Your data.</h2>
+          <div>
+            <div class="kicker">Character authoring</div>
+            <h2 class="section-title">
+              More than a name
+              <em>and a prompt.</em>
+            </h2>
+            <p class="section-copy">
+              NoctilAI treats a character like a piece of writing. Start
+              simply, then add detail only where it makes the roleplay better.
+            </p>
 
-        <p>
-          NoctilAI runs compatible AI models directly on your computer.
-          No cloud account, no external AI provider, no forced online dependency.
-        </p>
+            <div class="authoring-points">
+              <div class="authoring-point">
+                <span>01</span>
+                <div>
+                  <strong>Start with the essentials</strong>
+                  <p>Name, scenario, personality, voice and first message.</p>
+                </div>
+              </div>
+              <div class="authoring-point">
+                <span>02</span>
+                <div>
+                  <strong>Develop the inner life</strong>
+                  <p>Motivations, fears, values, habits and emotional triggers.</p>
+                </div>
+              </div>
+              <div class="authoring-point">
+                <span>03</span>
+                <div>
+                  <strong>Keep everything portable</strong>
+                  <p>Export a character folder and keep its portrait and details together.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <ul>
-          <li>No cloud account required</li>
-          <li>No external AI provider needed</li>
-          <li>Your chats stay on your machine</li>
-          <li>Your characters remain private</li>
-          <li>Works with compatible local GGUF models</li>
-        </ul>
-      </div>
+      <section class="section" id="privacy">
+        <div class="container privacy-layout">
+          <div>
+            <div class="kicker">Local-first, naturally</div>
+            <h2 class="section-title">
+              Your library,
+              <em>right where you use it.</em>
+            </h2>
+            <p class="section-copy">
+              NoctilAI runs on your Windows computer and keeps your roleplay
+              library there too. No cloud storage is required to create,
+              continue or organize your stories.
+            </p>
+            <p class="privacy-note">
+              NoctilAI supports local GGUF models through llama-cpp-python.
+              The technical setup is there when you need it, without becoming
+              the center of the experience.
+            </p>
+          </div>
 
-      <div class="privacy-card">
-        <h3>Privacy-first design</h3>
-        <p>
-          Made for users who want immersive AI conversations without giving up control of their data.
-        </p>
+          <div class="privacy-list">
+            <div class="privacy-item">
+              <strong>Ready on your computer</strong>
+              <span>Your scenes and characters are saved where you already use them.</span>
+            </div>
+            <div class="privacy-item">
+              <strong>Continue offline</strong>
+              <span>Once a model is installed, your stories remain available without a connection.</span>
+            </div>
+            <div class="privacy-item">
+              <strong>Choose your setup</strong>
+              <span>Pick a compatible model that suits your hardware and the way you write.</span>
+            </div>
+            <div class="privacy-item">
+              <strong>Move it when you want</strong>
+              <span>Export characters and keep clean backups of your own library.</span>
+            </div>
+            <div class="privacy-item">
+              <strong>No subscription required</strong>
+              <span>The core writing experience does not depend on a hosted AI plan.</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <div class="privacy-row">
-          <span>Cloud dependency</span>
-          <strong>None</strong>
+      <section class="section future" id="future">
+        <div class="container">
+          <div class="future-heading">
+            <div>
+              <div class="kicker">Development & supporter access</div>
+              <h2 class="section-title">
+                Building the next
+                <em>NoctilAI.</em>
+              </h2>
+            </div>
+            <div class="future-summary">
+              <p class="section-copy future-intro">
+                A clear look at what is being improved now, what is being built
+                next and how Discord support expands the studio.
+              </p>
+              <div class="future-signals">
+                <div class="future-signal">
+                  <span>01</span>
+                  <div>
+                    <strong>Desktop first</strong>
+                    <small>Performance and reliability</small>
+                  </div>
+                </div>
+                <div class="future-signal">
+                  <span>02</span>
+                  <div>
+                    <strong>Deeper creation</strong>
+                    <small>Lore, characters and group scenes</small>
+                  </div>
+                </div>
+                <div class="future-signal supporter">
+                  <span>03</span>
+                  <div>
+                    <strong>Supporter studio</strong>
+                    <small>Customization and advanced tools</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="future-stack">
+            <section class="future-block" aria-labelledby="roadmap-heading">
+              <div class="future-block-heading">
+                <div>
+                  <div class="block-label">Product roadmap</div>
+                  <h3 id="roadmap-heading">What the next releases are focused on.</h3>
+                </div>
+                <p>
+                  The desktop experience comes first: reliability, clearer
+                  model setup and richer tools for long-running roleplay.
+                </p>
+              </div>
+
+              <div class="roadmap-list">
+                <article class="roadmap-item">
+                  <span>Current focus</span>
+                  <h3>A faster, more reliable desktop app</h3>
+                  <p>
+                    Smoother navigation, clearer errors, stronger backend
+                    startup and practical guidance for choosing a local model.
+                  </p>
+                </article>
+                <article class="roadmap-item">
+                  <span>In development</span>
+                  <h3>Richer scenes and reusable worlds</h3>
+                  <p>
+                    Deeper lore, character relationships, improved creator
+                    tools and conversations involving several characters.
+                  </p>
+                </article>
+                <article class="roadmap-item">
+                  <span>Planned</span>
+                  <h3>Character packs and a wider library</h3>
+                  <p>
+                    Cleaner portable packs for characters and scenarios,
+                    followed by broader desktop platform support.
+                  </p>
+                </article>
+              </div>
+            </section>
+
+            <section class="supporter-showcase" aria-labelledby="supporter-heading">
+              <div class="supporter-heading">
+                <div>
+                  <div class="block-label">Discord supporter benefits</div>
+                  <h3 id="supporter-heading">Support development. <em>Shape your studio.</em></h3>
+                  <p>
+                    Boosting the NoctilAI Discord helps fund development and
+                    unlocks extra personalization and advanced creation tools.
+                    Characters made with those tools remain usable by everyone,
+                    while supporter-only creator options stay protected when editing.
+                  </p>
+                </div>
+                <a class="button button-primary" href="https://discord.gg/your-invite">View supporter access</a>
+              </div>
+
+              <div class="supporter-tiers">
+                <article class="supporter-tier">
+                  <div class="tier-name">
+                    <strong>Supporter</strong>
+                    <span>1 boost</span>
+                  </div>
+                  <ul class="tier-list">
+                    <li>Premium NoctilAI themes</li>
+                    <li>Expanded character creation fields</li>
+                    <li>Additional lore and world-building tools</li>
+                    <li>Supporter status inside the app</li>
+                  </ul>
+                </article>
+
+                <article class="supporter-tier featured">
+                  <div class="tier-name">
+                    <strong>Studio Supporter+</strong>
+                    <span>2+ boosts</span>
+                  </div>
+                  <ul class="tier-list">
+                    <li>Fully custom colors and imported fonts</li>
+                    <li>Multi-character roleplay conversations</li>
+                    <li>Character collections and grouped exports</li>
+                    <li>Verified supporter mark on shared profiles</li>
+                    <li>Maximum character creator personalization</li>
+                  </ul>
+                </article>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing" id="download">
+        <div class="container">
+          <div class="kicker">NoctilAI for Windows</div>
+          <h2 class="closing-title">
+            Begin on
+            <em>your machine.</em>
+          </h2>
+          <p>
+            Download the latest release, choose a local model that suits your
+            computer, and make the first character yours.
+          </p>
+
+          <div class="closing-actions">
+            <a class="button button-primary" href="https://github.com/your-username/noctilai/releases/latest">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3V15M12 15L7 10M12 15L17 10M5 20H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Download latest release
+            </a>
+            <a class="button button-secondary" href="https://discord.gg/your-invite">Join Discord</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <div class="brand-logo" aria-hidden="true"></div>
+          <span>© 2026 NoctilAI. Your stories stay yours.</span>
         </div>
 
-        <div class="privacy-row">
-          <span>Model execution</span>
-          <strong>Local</strong>
-        </div>
-
-        <div class="privacy-row">
-          <span>Conversation storage</span>
-          <strong>On device</strong>
-        </div>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a class="footer-link" href="https://github.com/NoctilAI/NoctilAI.github.io">GitHub</a>
+          <a class="footer-link" href="https://github.com/NoctilAI/NoctilAI.github.io/releases">Releases</a>
+          <a class="footer-link" href="https://discord.gg/CDWfEBv7RR">Discord</a>
+          <a class="footer-link" href="#privacy">Local-first</a>
+        </nav>
       </div>
-    </section>
-
-    <section class="download-section" id="download">
-      <div class="download-card">
-        <p class="eyebrow">Download</p>
-        <h2>Get NoctilAI</h2>
-
-        <p>
-          Download the latest version from GitHub Releases. Updates and experimental builds
-          will be published there.
-        </p>
-
-        <div class="buttons center">
-          <a
-            class="btn btn-primary"
-            href="https://github.com/NoctilAI/NoctilAI.github.io/releases/latest"
-            target="_blank"
-            rel="noopener"
-          >
-            Open GitHub Releases
-          </a>
-
-          <a
-            class="btn btn-secondary"
-            href="https://discord.gg/CDWfEBv7RR"
-            target="_blank"
-            rel="noopener"
-          >
-            Join the community
-          </a>
-        </div>
-
-        <p class="small">
-          Requirements depend on the local AI model you choose to run.
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div>
-      <strong>NoctilAI</strong>
-      <p>Local AI roleplay application.</p>
-    </div>
-
-    <div class="footer-links">
-      <a href="https://discord.gg/CDWfEBv7RR" target="_blank" rel="noopener">Discord</a>
-      <a href="https://github.com/NoctilAI/NoctilAI.github.io/releases/latest" target="_blank" rel="noopener">Releases</a>
-    </div>
-  </footer>
-</body>
+    </footer>
+  </body>
 </html>
