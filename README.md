@@ -27,13 +27,13 @@ minimum :
 * Windows 10/11
 *8 GB RAM 
 * 4 GB VRAM minimum
-*400 MB (For app only)
+* 400 MB (For app only)
 
 Recommended:
 
 * Windows 10/11
 * Dedicated GPU (optional but recommended)
-*16 GB RAM or more for larger models
+* 16 GB RAM or more for larger models
 
 ## Privacy
 
