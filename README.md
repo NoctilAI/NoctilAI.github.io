@@ -14,6 +14,11 @@ Unlike cloud-based AI services, NoctilAI allows you to run compatible AI models 
 * Custom AI settings
 * Modern dark UI
 
+## Important Notice
+Please be aware that this is currently the only **official NoctilAI website**.
+
+Any other website claiming to represent NoctilAI, distribute NoctilAI files, or provide downloads on behalf of the project should be considered untrusted unless officially announced on discord.
+
 ## Download
 
 Download the latest version from the **Releases** section of this repository.
@@ -22,14 +27,14 @@ Download the latest version from the **Releases** section of this repository.
 
 Requirements depend on the AI model you choose to run.
 
-minimum :
+### minimum :
 
 * Windows 10/11
 *8 GB RAM 
 * 4 GB VRAM minimum
 * 400 MB (For app only)
 
-Recommended:
+### Recommended:
 
 * Windows 10/11
 * Dedicated GPU (optional but recommended)
@@ -39,9 +44,16 @@ Recommended:
 
 NoctilAI is designed with local execution in mind. Conversations and character data remain on your device unless you choose to share them.
 
-## Community
+## ommunity
 
-Join the community to share characters, discuss development and provide feedback.
+Join the official NoctilAI Discord server to:
+* Become a beta tester
+* Share your characters
+* Get development updates
+* Report bugs
+* Suggest new features
+* Talk with other users
+[![Join Discord](discord-banner.png)](https://discord.gg/CDWfEBv7RR)
 
 ## Status
 
