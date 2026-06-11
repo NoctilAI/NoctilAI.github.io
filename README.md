@@ -52,9 +52,9 @@ Join the official NoctilAI Discord server to:
 * Get development updates
 * Report bugs
 * Suggest new features
-<p align="center">
+<p>
   <a href="https://discord.gg/CDWfEBv7RR">
-    <img src="discord-banner.png" width="700" alt="Join the NoctilAI Discord">
+    <img src="discord-banner.png" width="400" alt="Join the NoctilAI Discord">
   </a>
 </p>
 
