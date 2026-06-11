@@ -30,7 +30,7 @@ Requirements depend on the AI model you choose to run.
 ### minimum :
 
 * Windows 10/11
-*8 GB RAM 
+* 8 GB RAM 
 * 4 GB VRAM minimum
 * 400 MB (For app only)
 
@@ -52,8 +52,11 @@ Join the official NoctilAI Discord server to:
 * Get development updates
 * Report bugs
 * Suggest new features
-* Talk with other users
-[![Join Discord](discord-banner.png)](https://discord.gg/CDWfEBv7RR)
+<p align="center">
+  <a href="[https://discord.gg/CDWfEBv7RR]">
+    <img src="discord-banner.png" width="700" alt="Join the NoctilAI Discord">
+  </a>
+</p>
 
 ## Status
 
